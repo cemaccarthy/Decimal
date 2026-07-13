@@ -55,25 +55,27 @@
       -webkit-tap-highlight-color: transparent;
       transition: background 0.15s ease;
     }
-    .song-item.touching { background: #e8e8ed; transition: background 0.05s ease; }
     .song-item.pressing { background: #d1d1d6; transition: background 1.5s ease; }
     .song-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
     .song-name { font-weight: 500; font-size: 16px; }
     .song-duration { font-size: 13px; color: #6e6e73; margin-top: 2px; }
     .status-msg { margin-top: 10px; font-size: 14px; color: #6e6e73; }
 
-    /* Overlays - FIXED for iOS Safari */
+    /* Overlays */
     .overlay {
-      position: fixed;
-      inset: 0;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
       background: rgba(0,0,0,0.4);
-      z-index: 200;
+      z-index: 9999 !important;
       display: none;
       align-items: center;
       justify-content: center;
     }
     .overlay.active {
-      display: flex;
+      display: flex !important;
       animation: fadeIn 0.2s ease;
     }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -144,7 +146,7 @@
     .btn-cancel { background: #f5f5f7; color: #1d1d1f; }
     .btn-save { background: #007aff; color: #ffffff; }
 
-    /* Expanded Player Bar */
+    /* Player Bar */
     #player-bar {
       position: fixed;
       bottom: 0;
