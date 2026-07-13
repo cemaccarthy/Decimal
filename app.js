@@ -1,4 +1,4 @@
-// app.js - Step 2: Composer creation modal with embedded catalogue creation
+// app.js - Step 3: Composer selector component
 import { secondsToDecimalMMSS } from '/taktwerk/takt.js';
 
 const DB_NAME = 'TaktwerkDB';
@@ -18,12 +18,14 @@ const PAUSE_ICON = `<svg viewBox="0 0 24 24" fill="none"><path opacity="0.1" d="
 let playerBar, playerSongName, playerTimes, progressFill, progressContainer, playPauseBtn;
 let renameOverlay, renameInput, renameSave, renameCancel;
 let tabLibrary, tabAdd, viewLibrary, viewAdd;
+let composerOverlay, compFirst, compLast, compCountry, compBirth, compDeath;
+let catalogueList, addCatalogueBtn, composerCancel, composerSave, addStatusEl;
 
-// Composer modal references
-let composerOverlay, composerModal;
-let compFirst, compLast, compCountry, compBirth, compDeath;
-let catalogueList, addCatalogueBtn, composerCancel, composerSave;
-let addStatusEl;
+// Composer selector refs
+let composerTrigger, composerDropdown, composerSearchWrap, composerSearchInput;
+let composerListEl, composerAddNewBtn, selectedComposerDisplay;
+let allComposers = [];
+let selectedComposerId = null;
 
 // --- IndexedDB ---
 async function initDB() {
@@ -31,458 +33,317 @@ async function initDB() {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      if (!db.objectStoreNames.contains('songs')) {
-        db.createObjectStore('songs', { keyPath: 'id', autoIncrement: true });
-      }
+      if (!db.objectStoreNames.contains('songs')) db.createObjectStore('songs', { keyPath: 'id', autoIncrement: true });
       if (!db.objectStoreNames.contains('composers')) {
-        const composers = db.createObjectStore('composers', { keyPath: 'id', autoIncrement: true });
-        composers.createIndex('lastName', 'lastName', { unique: false });
-        composers.createIndex('firstName', 'firstName', { unique: false });
+        const s = db.createObjectStore('composers', { keyPath: 'id', autoIncrement: true });
+        s.createIndex('lastName', 'lastName', { unique: false });
+        s.createIndex('firstName', 'firstName', { unique: false });
       }
       if (!db.objectStoreNames.contains('catalogues')) {
-        const catalogues = db.createObjectStore('catalogues', { keyPath: 'id', autoIncrement: true });
-        catalogues.createIndex('composerId', 'composerId', { unique: false });
+        const s = db.createObjectStore('catalogues', { keyPath: 'id', autoIncrement: true });
+        s.createIndex('composerId', 'composerId', { unique: false });
       }
       if (!db.objectStoreNames.contains('pieces')) {
-        const pieces = db.createObjectStore('pieces', { keyPath: 'id', autoIncrement: true });
-        pieces.createIndex('composerId', 'composerId', { unique: false });
-        pieces.createIndex('title', 'title', { unique: false });
+        const s = db.createObjectStore('pieces', { keyPath: 'id', autoIncrement: true });
+        s.createIndex('composerId', 'composerId', { unique: false });
+        s.createIndex('title', 'title', { unique: false });
       }
       if (!db.objectStoreNames.contains('movements')) {
-        const movements = db.createObjectStore('movements', { keyPath: 'id', autoIncrement: true });
-        movements.createIndex('pieceId', 'pieceId', { unique: false });
-        movements.createIndex('movementNumber', 'movementNumber', { unique: false });
+        const s = db.createObjectStore('movements', { keyPath: 'id', autoIncrement: true });
+        s.createIndex('pieceId', 'pieceId', { unique: false });
+        s.createIndex('movementNumber', 'movementNumber', { unique: false });
       }
     };
-    request.onsuccess = (event) => { db = event.target.result; resolve(db); };
+    request.onsuccess = (event) => { db = event.target.result; resolve(c =>
+   (db); };
     request.onerror = (event) => reject(event.target.error);
   });
 }
 
-// --- Composer CRUD ---
-async function saveComposer(composerData) {
+// --- Composer CRUD --- c
+async function loadComposers() {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['composers'], 'readwrite');
-    const store = transaction.objectStore('composers');
-    const request = store.add(composerData);
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
+    const tx = db.transaction(['composers'], 'readonly');
+    const store = tx.objectStore('composers');
+    const req = store.getAll();
+    req.onsuccess = () => {
+      const composers = req.result.sort((a, b) => {
+        const lastCmp = a.lastName.localeCompare(b.lastName);
+        return lastCmp !== 0 ? lastCmp : a.firstName.localeCompare(b.firstName);
+      });
+      resolve(composers);
+    };
+    req.onerror = () => reject(req.error);
   });
 }
 
-async function saveCatalogue(catalogueData) {
+async function saveComposer(data) {.lastName.toLowerCase().includes(q) ||
+
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['catalogues'], 'readwrite');
-    const store = transaction.objectStore('catalogues');
-    const request = store.add(catalogueData);
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
+    const tx = db.transaction(['composers'], 'readwrite');
+    tx.objectStore('composers').add(data).onsuccess = (e) => resolve(e.target.result);
   });
 }
 
-// --- Existing Songs CRUD (unchanged) ---
+async function saveCatalogue(data) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(['catalogues'], 'readwrite');
+    tx.objectStore('catalogues').add(data).onsuccess = (e) => resolve(e.target.result);
+  });
+}
+
+// --- Songs CRUD (unchanged) ---
 async function saveSongBlob(file) {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['songs'], 'readwrite');
-    const store = transaction.objectStore('songs');
-    const songData = { name: file.name, blob: file, duration: null, addedAt: Date.now() };
-    const addRequest = store.add(songData);
-    addRequest.onsuccess = () => resolve(addRequest.result);
-    addRequest.onerror = () => reject(addRequest.error);
-  });
+  return new Promise((r, j) => { const tx = db.transaction(['songs'],'readwrite'); tx.objectStore('songs').add({name:file.name,blob:file,duration:null,addedAt:Date.now()}).onsuccess=e=>r(e.target.result); });
 }
-
-async function updateSongName(songId, newName) {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['songs'], 'readwrite');
-    const store = transaction.objectStore('songs');
-    const getRequest = store.get(songId);
-    getRequest.onsuccess = () => {
-      const song = getRequest.result;
-      if (song) {
-        song.name = newName;
-        store.put(song).onsuccess = () => resolve();
-      }
-    };
-    getRequest.onerror = () => reject(getRequest.error);
-  });
+async function updateSongName(id, name) {
+  return new Promise((r, j) => { const tx = db.transaction(['songs'],'readwrite'); const s = tx.objectStore('songs'); s.get(id).onsuccess=e=>{const song=e.target.result;if(song){song.name=name;s.put(song).onsuccess=()=>r();}}; });
 }
-
-async function deleteSong(songId) {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['songs'], 'readwrite');
-    const store = transaction.objectStore('songs');
-    store.delete(songId).onsuccess = () => resolve();
-  });
+async function deleteSong(id) { return new Promise(r => { db.transaction(['songs'],'readwrite').objectStore('songs').delete(id).onsuccess=()=>r(); }); }
+async function extractAndUpdateDuration(id, file) {
+  try { const t=new Audio();t.src=URL.createObjectURL(file);const d=await new Promise((r,j)=>{t.onloadedmetadata=()=>{URL.revokeObjectURL(t.src);r(t.duration);};t.onerror=()=>{URL.revokeObjectURL(t.src);j();};});const tx=db.transaction(['songs'],'readwrite');const s=tx.objectStore('songs');s.get(id).onsuccess=e=>{const song=e.target.result;if(song){song.duration=d;s.put(song);}};renderLibrary(await loadSongs());}catch(e){}
 }
-
-async function extractAndUpdateDuration(songId, file) {
-  try {
-    const tempAudio = new Audio();
-    tempAudio.src = URL.createObjectURL(file);
-    const duration = await new Promise((resolve, reject) => {
-      tempAudio.onloadedmetadata = () => { URL.revokeObjectURL(tempAudio.src); resolve(tempAudio.duration); };
-      tempAudio.onerror = () => { URL.revokeObjectURL(tempAudio.src); reject(); };
-    });
-    const transaction = db.transaction(['songs'], 'readwrite');
-    const store = transaction.objectStore('songs');
-    const getRequest = store.get(songId);
-    getRequest.onsuccess = () => {
-      const song = getRequest.result;
-      if (song) { song.duration = duration; store.put(song); }
-    };
-    const songs = await loadSongs();
-    renderLibrary(songs);
-  } catch (e) { console.warn(`Duration extraction failed for ${file.name}`); }
-}
-
-async function loadSongs() {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['songs'], 'readonly');
-    const store = transaction.objectStore('songs');
-    store.getAll().onsuccess = (e) => resolve(e.target.result);
-  });
-}
+async function loadSongs() { return new Promise(r => { db.transaction(['songs'],'readonly').objectStore('songs').getAll().onsuccess=e=>r(e.target.result); }); }
 
 // --- Tab Switching ---
 function switchTab(tab) {
-  if (tab === 'library') {
-    tabLibrary.classList.add('active');
-    tabAdd.classList.remove('active');
-    viewLibrary.classList.add('active');
-    viewAdd.classList.remove('active');
-    loadSongs().then(songs => renderLibrary(songs));
-  } else {
-    tabAdd.classList.add('active');
-    tabLibrary.classList.remove('active');
-    viewAdd.classList.add('active');
-    viewLibrary.classList.remove('active');
-  }
+  if (tab==='library') { tabLibrary.classList.add('active');tabAdd.classList.remove('active');viewLibrary.classList.add('active');viewAdd.classList.remove('active');loadSongs().then(renderLibrary); }
+  else { tabAdd.classList.add('active');tabLibrary.classList.remove('active');viewAdd.classList.add('active');viewLibrary.classList.remove('active'); }
 }
 
-// --- Player UI ---
-function updatePlayerUI(elapsed, remaining, progress) {
-  playerTimes.textContent = `${secondsToDecimalMMSS(elapsed)} / ${secondsToDecimalMMSS(elapsed + remaining)}`;
-  progressFill.style.width = `${(progress * 100).toFixed(2)}%`;
+// --- Player ---
+function updatePlayerUI(el,rem,p) { playerTimes.textContent=`${secondsToDecimalMMSS(el)} / ${secondsToDecimalMMSS(el+rem)}`;progressFill.style.width=`${(p*100).toFixed(2)}%`; }
+function updatePlayPauseIcon(p) { playPauseBtn.innerHTML=p?PAUSE_ICON:PLAY_ICON;playPauseBtn.setAttribute('aria-label',p?'Pause':'Play'); }
+async function playSong(id) {
+  db.transaction(['songs'],'readonly').objectStore('songs').get(id).onsuccess=e=>{const s=e.target.result;if(s&&s.blob){if(audioPlayer.src)URL.revokeObjectURL(audioPlayer.src);audioPlayer.src=URL.createObjectURL(s.blob);audioPlayer.play().catch(console.error);currentSongId=id;playerSongName.textContent=s.name;playerBar.classList.add('active');updatePlayPauseIcon(true);if('mediaSession'in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:s.name,artist:'Taktwerk',album:'Local Library'});navigator.mediaSession.setActionHandler('play',()=>audioPlayer.play());navigator.mediaSession.setActionHandler('pause',()=>audioPlayer.pause());navigator.mediaSession.setActionHandler('stop',()=>{audioPlayer.pause();audioPlayer.currentTime=0;playerBar.classList.remove('active');currentSongId=null;updatePlayPauseIcon(false);loadSongs().then(renderLibrary);});}}};
 }
+function togglePlayback(id) { currentSongId==id&&!audioPlayer.paused?audioPlayer.pause():playSong(id); }
 
-function updatePlayPauseIcon(isPlaying) {
-  playPauseBtn.innerHTML = isPlaying ? PAUSE_ICON : PLAY_ICON;
-  playPauseBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
-}
+// --- Context Menu ---
+function dismissContextMenu() { if(activeContextMenu){activeContextMenu.remove();activeContextMenu=null;}document.querySelectorAll('.song-item.menu-open').forEach(e=>e.classList.remove('menu-open')); }
+function showContextMenu(id,name,el) { dismissContextMenu();el.classList.add('menu-open');const m=document.createElement('div');m.className='context-menu';m.innerHTML='<button data-action="rename">Rename</button><button data-action="delete" class="btn-danger">Delete</button>';el.parentNode.insertBefore(m,el.nextSibling);activeContextMenu=m;m.querySelector('[data-action="rename"]').onclick=async()=>{dismissContextMenu();showRenameModal(id,name);};m.querySelector('[data-action="delete"]').onclick=async()=>{dismissContextMenu();if(currentSongId==id){audioPlayer.pause();playerBar.classList.remove('active');currentSongId=null;updatePlayPauseIcon(false);}await deleteSong(id);renderLibrary(await loadSongs());}; }
+document.addEventListener('click',e=>{if(activeContextMenu&&!activeContextMenu.contains(e.target)&&!e.target.closest('.song-item'))dismissContextMenu();});
 
-async function playSong(songId) {
-  const transaction = db.transaction(['songs'], 'readonly');
-  const store = transaction.objectStore('songs');
-  store.get(songId).onsuccess = (e) => {
-    const song = e.target.result;
-    if (song && song.blob) {
-      if (audioPlayer.src) URL.revokeObjectURL(audioPlayer.src);
-      audioPlayer.src = URL.createObjectURL(song.blob);
-      audioPlayer.play().catch(err => console.error('Playback failed:', err));
-      currentSongId = songId;
-      playerSongName.textContent = song.name;
-      playerBar.classList.add('active');
-      updatePlayPauseIcon(true);
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({ title: song.name, artist: 'Taktwerk', album: 'Local Library' });
-        navigator.mediaSession.setActionHandler('play', () => audioPlayer.play());
-        navigator.mediaSession.setActionHandler('pause', () => audioPlayer.pause());
-        navigator.mediaSession.setActionHandler('stop', () => {
-          audioPlayer.pause(); audioPlayer.currentTime = 0;
-          playerBar.classList.remove('active'); currentSongId = null;
-          updatePlayPauseIcon(false);
-          loadSongs().then(songs => renderLibrary(songs));
-        });
-      }
-    }
-  };
-}
+// --- Rename ---
+let renameTargetId=null;
+function showRenameModal(id,name){renameTargetId=id;renameInput.value=name;renameOverlay.classList.add('active');setTimeout(()=>{renameInput.focus();renameInput.select();},100);}
+function hideRenameModal(){renameOverlay.classList.remove('active');renameTargetId=null;}
 
-function togglePlayback(songId) {
-  if (currentSongId == songId && !audioPlayer.paused) {
-    audioPlayer.pause();
-  } else {
-    playSong(songId);
-  }
-}
-
-// --- Inline Context Menu ---
-function dismissContextMenu() {
-  if (activeContextMenu) { activeContextMenu.remove(); activeContextMenu = null; }
-  document.querySelectorAll('.song-item.menu-open').forEach(el => el.classList.remove('menu-open'));
-}
-
-function showContextMenu(songId, songName, songElement) {
-  dismissContextMenu();
-  songElement.classList.add('menu-open');
-  const menu = document.createElement('div');
-  menu.className = 'context-menu';
-  menu.innerHTML = `<button data-action="rename">Rename</button><button data-action="delete" class="btn-danger">Delete</button>`;
-  songElement.parentNode.insertBefore(menu, songElement.nextSibling);
-  activeContextMenu = menu;
-  menu.querySelector('[data-action="rename"]').addEventListener('click', async () => {
-    dismissContextMenu();
-    showRenameModal(songId, songName);
-  });
-  menu.querySelector('[data-action="delete"]').addEventListener('click', async () => {
-    dismissContextMenu();
-    if (currentSongId == songId) {
-      audioPlayer.pause(); playerBar.classList.remove('active');
-      currentSongId = null; updatePlayPauseIcon(false);
-    }
-    await deleteSong(songId);
-    renderLibrary(await loadSongs());
-  });
-}
-
-document.addEventListener('click', (e) => {
-  if (activeContextMenu && !activeContextMenu.contains(e.target) && !e.target.closest('.song-item')) {
-    dismissContextMenu();
-  }
-});
-
-// --- Rename Modal ---
-let renameTargetId = null;
-function showRenameModal(songId, currentName) {
-  renameTargetId = songId;
-  renameInput.value = currentName;
-  renameOverlay.classList.add('active');
-  setTimeout(() => { renameInput.focus(); renameInput.select(); }, 100);
-}
-function hideRenameModal() { renameOverlay.classList.remove('active'); renameTargetId = null; }
-
-// --- Composer Modal Logic ---
-function openComposerModal() {
-  // Reset form
-  compFirst.value = '';
-  compLast.value = '';
-  compCountry.value = '';
-  compBirth.value = '';
-  compDeath.value = '';
-  catalogueList.innerHTML = '';
-  addStatusEl.textContent = '';
-  composerOverlay.classList.add('active');
-  setTimeout(() => compFirst.focus(), 100);
-}
-
-function closeComposerModal() {
-  composerOverlay.classList.remove('active');
-}
-
-function addCatalogueInput() {
-  const entry = document.createElement('div');
-  entry.className = 'catalogue-entry';
-  entry.innerHTML = `
-    <input type="text" placeholder="Catalogue name (e.g., Op., BWV)" autocomplete="off">
-    <button type="button" class="catalogue-remove">✕</button>
-  `;
-  entry.querySelector('.catalogue-remove').addEventListener('click', () => entry.remove());
-  catalogueList.appendChild(entry);
-  entry.querySelector('input').focus();
-}
-
-async function handleComposerSave() {
-  const firstName = compFirst.value.trim();
-  const lastName = compLast.value.trim();
-  const country = compCountry.value.trim();
-  const birthYear = parseInt(compBirth.value, 10);
-  const deathYear = parseInt(compDeath.value, 10);
-
-  // Validate required fields
-  if (!firstName || !lastName || !country || isNaN(birthYear) || isNaN(deathYear)) {
-    addStatusEl.textContent = 'Please fill in all required fields.';
-    return;
-  }
-
-  try {
-    // Save composer
-    const composerId = await saveComposer({ firstName, lastName, country, birthYear, deathYear });
-
-    // Save catalogues
-    const catalogueInputs = catalogueList.querySelectorAll('.catalogue-entry input');
-    let catalogueCount = 0;
-    for (const input of catalogueInputs) {
-      const name = input.value.trim();
-      if (name) {
-        await saveCatalogue({ composerId, name });
-        catalogueCount++;
-      }
-    }
-
+// --- Composer Modal ---
+function openComposerModal(){compFirst.value='';compLast.value='';compCountry.value='';compBirth.value='';compDeath.value='';catalogueList.innerHTML='';addStatusEl.textContent='';composerOverlay.classList.add('active');setTimeout(()=>compFirst.focus(),100);}
+function closeComposerModal(){composerOverlay.classList.remove('active');}
+function addCatalogueInput(){const e=document.createElement('div');e.className='catalogue-entry';e.innerHTML='<input type="text" placeholder="Catalogue name (e.g., Op., BWV)" autocomplete="off"><button type="button" class="catalogue-remove">✕</button>';e.querySelector('.catalogue-remove').onclick=()=>e.remove();catalogueList.appendChild(e);e.querySelector('input').focus();}
+async function handleComposerSave(){
+  const fn=compFirst.value.trim(),ln=compLast.value.trim(),co=compCountry.value.trim(),by=parseInt(compBirth.value,10),dy=parseInt(compDeath.value,10);
+  if(!fn||!ln||!co||isNaN(by)||isNaN(dy)){addStatusEl.textContent='Please fill in all required fields.';return;}
+  try{
+    const cid=await saveComposer({firstName:fn,lastName:ln,country:co,birthYear:by,deathYear:dy});
+    let cc=0;for(const inp of catalogueList.querySelectorAll('.catalogue-entry input')){const n=inp.value.trim();if(n){await saveCatalogue({composerId:cid,name:n});cc++;}}
     closeComposerModal();
-    addStatusEl.textContent = `Composer "${lastName}, ${firstName}" added${catalogueCount > 0 ? ` with ${catalogueCount} catalogue${catalogueCount > 1 ? 's' : ''}` : ''}!`;
-  } catch (error) {
-    console.error(error);
-    addStatusEl.textContent = 'Error saving composer.';
-  }
+    addStatusEl.textContent=`Composer "${ln}, ${fn}" added${cc>0?` with <LaTex>id_1</LaTex>{cc>1?'s':''}`:''}!`;
+    // Refresh selector if open
+    await refreshComposerSelector();
+  }catch(e){console.error(e);addStatusEl.textContent='Error saving composer.';}
 }
 
-// --- Library Rendering ---
-function renderLibrary(songs) {
-  const libraryEl = document.getElementById('library-list');
-  libraryEl.innerHTML = '';
-  if (songs.length === 0) {
-    libraryEl.innerHTML = '<li style="text-align:center; padding:20px; color:#6e6e73;">No songs imported yet.<br><br>Tap "Add Music" to get started.</li>';
+// --- Composer Selector ---
+async function refreshComposerSelector() {
+  allComposers = await loadComposers();
+  renderComposerList(allComposers);
+  // Show/hide search based on count
+  composerSearchWrap.style.display = allComposers.length > 10 ? 'block' : 'none';
+}
+
+function renderComposerList(composers) {
+  composerListEl.innerHTML = '';
+  if (composers.length === 0) {
+    composerListEl.innerHTML = '<div class="composer-empty">No composers found</div>';
     return;
   }
-  songs.forEach(song => {
-    const li = document.createElement('li');
-    li.className = 'song-item';
-    const durationDisplay = song.duration !== null ? secondsToDecimalMMSS(song.duration) : 'Loading...';
-    li.innerHTML = `<div class="song-info"><span class="song-name">${song.name}</span><span class="song-duration">${durationDisplay}</span></div>`;
-    li.addEventListener('touchstart', () => {
-      li.classList.add('pressing');
-      longPressTimer = setTimeout(() => {
-        if (navigator.vibrate) navigator.vibrate(15);
-        li.classList.remove('pressing');
-        showContextMenu(song.id, song.name, li);
-      }, 400);
-    });
-    li.addEventListener('touchend', () => { clearTimeout(longPressTimer); li.classList.remove('pressing'); });
-    li.addEventListener('touchcancel', () => { clearTimeout(longPressTimer); li.classList.remove('pressing'); });
-    li.addEventListener('touchmove', () => { clearTimeout(longPressTimer); li.classList.remove('pressing'); });
-    li.addEventListener('click', () => {
-      if (activeContextMenu && li.classList.contains('menu-open')) { dismissContextMenu(); return; }
-      togglePlayback(song.id);
-    });
-    libraryEl.appendChild(li);
+  composers.forEach(c => {
+    const opt = document.createElement('div');
+    opt.className = 'composer-option';
+    opt.textContent = `${c.lastName}, ${c.firstName}`;
+    opt.addEventListener('click', () => selectComposer(c.id, `${c.lastName}, ${c.firstName}`));
+    composerListEl.appendChild(opt);
   });
 }
 
-// --- Import (legacy, kept for backward compat) ---
-async function handleImport(files) {
-  const statusEl = document.getElementById('status');
-  if (!statusEl) return;
-  statusEl.textContent = `Importing ${files.length} songs...`;
-  try {
-    const songIds = [];
-    for (let i = 0; i < files.length; i++) {
-      const id = await saveSongBlob(files[i]);
-      songIds.push({ id, file: files[i] });
-      statusEl.textContent = `Saved ${i + 1}/${files.length}`;
-    }
-    statusEl.textContent = 'Extracting metadata...';
-    for (const { id, file } of songIds) await extractAndUpdateDuration(id, file);
-    statusEl.textContent = `Import complete! ${files.length} song${files.length > 1 ? 's' : ''} added.`;
-    setTimeout(() => switchTab('library'), 800);
-  } catch (error) {
-    console.error(error);
-    statusEl.textContent = 'Error importing songs.';
+function selectComposer(id, displayName) {
+  selectedComposerId = id;
+  composerTrigger.textContent = displayName;
+  composerTrigger.classList.remove('placeholder');
+  closeComposerDropdown();
+  selectedComposerDisplay.textContent = `Selected: ${displayName} (ID: ${id})`;
+}
+
+function openComposerDropdown() {
+  refreshComposerSelector();
+  // Position dropdown below trigger
+  const rect = composerTrigger.getBoundingClientRect();
+  composerDropdown.style.top = `${rect.bottom + 4}px`;
+  composerDropdown.style.left = `${rect.left}px`;
+  composerDropdown.classList.add('active');
+  if (allComposers.length > 10) {
+    composerSearchInput.value = '';
+    setTimeout(() => composerSearchInput.focus(), 50);
   }
 }
+
+function closeComposerDropdown() {
+  composerDropdown.classList.remove('active');
+}
+
+function filterComposers(query) {
+  const q = query.toLowerCase().trim();
+    c.firstName.toLowerCase  if (!q) { renderComposerList(allComposers); return; }
+  const filtered = allComposers.filter(c =>
+    c.lastName.toLowerCase().includes(q) ||
+    c.firstName.toLowerCase().includes(q)().includes(q) ||
+    `${ ||
+    `${c.lastName},c.lastName}, <LaTex>id_2</LaTex>{c.firstName}`.toLowerCase().includes(q)
+  );
+  render(q)
+  );
+  renderComposerList(filtered);ComposerList(filtered);
+}
+
+// --- Library ---
+function renderLibrary
+}
+
+// --- Library ---
+function renderLibrary(songs) {(songs) {
+  const el
+  const el=document.getElementById('library-list');el.innerHTML=document.getElementById('library-list');el.innerHTML='';
+  if(!songs.length='';
+  if(!songs.length){el.innerHTML='<li style="text){el.innerHTML='<li style="text-align:center;padding:20px;color-align:center;padding:20px;color:#6e6:#6e6e73;">e73;">No songs imported yetNo songs imported yet.<br><br.<br><br>Tap "Add Music" to get>Tap "Add Music" to get started.</li>';return;}
+  started.</li>';return;}
+  songs.forEach(s=> songs.forEach(s=>{const li=document{const li=document.createElement('li');li.className='song.createElement('li');li.className='song-item';const d-item';const d=s.duration!==null=s.duration!==null?secondsToDecimalMMSS(s.duration?secondsToDecimalMMSS(s.duration):'Loading...):'Loading...';li.innerHTML=`';li.innerHTML=`<div class="<div class="song-info"><spansong-info"><span class="song-name"><LaTex>id_3</LaTex>{s.name}</span><span class="song-duration"><LaTex>id_4</LaTex>{d}</span></div>`;lid}</span></div>`;li.addEventListener('touchstart',()=>{li.addEventListener('touchstart',()=>{li.classList.add('press.classList.add('pressing');longPressing');longPressTimer=setTimeout(()=>Timer=setTimeout(()=>{if(navigator{if(navigator.vibrate)navigator.vibrate(1.vibrate)navigator.vibrate(15);li.classList5);li.classList.remove('pressing.remove('pressing');showContextMenu(s.id,s.name,');showContextMenu(s.id,s.name,li);},4li);},400);});00);});li.addEventListener('touchli.addEventListener('touchend',()=>{end',()=>{clearTimeout(longPressclearTimeout(longPressTimer);li.classListTimer);li.classList.remove('pressing');});li.addEventListener.remove('pressing');});li.addEventListener('touchcancel',()=>{clearTimeout('touchcancel',()=>{clearTimeout(longPressTimer);li.classList.remove('(longPressTimer);li.classList.remove('pressing');});li.addEventListener('touchpressing');});li.addEventListener('touchmove',()=>{move',()=>{clearTimeout(longPressclearTimeout(longPressTimer);li.classList.remove('pressingTimer);li.classList.remove('pressing');});li.addEventListener('click',()=>');});li.addEventListener('click',()=>{if(activeContextMenu&&li.classList.contains{if(activeContextMenu&&li.classList.contains('menu-open'))('menu-open')){dismissContextMenu();{dismissContextMenu();return;}togglePlayback(s.id);});return;}togglePlayback(s.id);});el.appendChild(li);});
+}
+
+el.appendChild(li);});
+}
+
+// --- Import (// --- Import (legacy) ---
+legacy) ---
+async function handleImport(files){const stasync function handleImport(files){const st=document.getElementById('status');if(!st=document.getElementById('status');if(!st)return;st.textContent)return;st.textContent=`Importing ${=`Importing ${files.length} songs...`;try{files.length} songs...`;try{const ids=[];for(let i=const ids=[];for(let i=0;i<files0;i<files.length;i++){const.length;i++){const id=await saveSongBlob(files[i id=await saveSongBlob(files[i]);ids.push({]);ids.push({id,file:id,file:files[i]});files[i]});st.textContent=`st.textContent=`Saved <LaTex>id_5</LaTex>{files.lengthSaved <LaTex>id_6</LaTex>{files.length}`;}st.textContent='Extracting}`;}st.textContent='Extracting metadata...';for metadata...';for(const{id(const{id,file}of ids)await extractAndUpdate,file}of ids)await extractAndUpdateDuration(id,file);Duration(id,file);st.textContent=`Importst.textContent=`Import complete! <LaTex>id_7</LaTex>{files.length} song<LaTex>id_8</LaTex>{files.length>1?'s':''}files.length>1?'s':''} added.`;setTimeout added.`;setTimeout(()=>switchTab('(()=>switchTab('library'),80library'),800);}catch(e0);}catch(e){console.error(e);st){console.error(e);st.textContent='Error importing songs.';}}.textContent='Error importing songs.';}}
+
+// --- Init ---
+async function
 
 // --- Init ---
 async function initApp() {
+  await init initApp() {
   await initDB();
+ DB();
+  playerBar=document playerBar=document.getElementById('player-bar.getElementById('player-bar');playerSongName');playerSongName=document.getElementById('player=document.getElementById('player-song-name');player-song-name');playerTimes=document.getElementById('Times=document.getElementById('player-times');progressplayer-times');progressFill=document.getElementById('Fill=document.getElementById('progress-fill');progressprogress-fill');progressContainer=document.getElementById('progress-container');playContainer=document.getElementById('progress-container');playPauseBtn=document.getElementById('play-pausePauseBtn=document.getElementById('play-pause-btn');
+ -btn');
+  renameOverlay=document.getElementById renameOverlay=document.getElementById('rename-overlay');('rename-overlay');renameInput=document.getElementByIdrenameInput=document.getElementById('rename-input');('rename-input');renameSave=document.getElementByIdrenameSave=document.getElementById('rename-save');renameCancel=document.getElementById('rename-save');renameCancel=document.getElementById('rename-cancel');
+  tabLibrary('rename-cancel');
+  tabLibrary=document.getElementById('tab=document.getElementById('tab-library');tabAdd-library');tabAdd=document.getElementById('tab-add');viewLibrary=document.getElementById('tab-add');viewLibrary=document.getElementById('view=document.getElementById('view-library');viewAdd-library');viewAdd=document.getElementById('view=document.getElementById('view-add');
+ -add');
+  composerOverlay=document.getElementById composerOverlay=document.getElementById('composer-overlay');('composer-overlay');compFirst=document.getElementById('comp-first');compFirst=document.getElementById('comp-first');compLast=document.getElementByIdcompLast=document.getElementById('comp-last');('comp-last');compCountry=document.getElementByIdcompCountry=document.getElementById('comp-country');('comp-country');compBirth=document.getElementByIdcompBirth=document.getElementById('comp-birth('comp-birth');compDeath=document.getElementById('comp-death');compDeath=document.getElementById('comp-death');catalogueList');catalogueList=document.getElementById('catalog=document.getElementById('catalogue-list');addue-list');addCatalogueBtn=documentCatalogueBtn=document.getElementById('add-c.getElementById('add-catalogue-btn');atalogue-btn');composerCancel=document.getElementByIdcomposerCancel=document.getElementById('composer-cancel');('composer-cancel');composerSave=document.getElementById('composer-save');composerSave=document.getElementById('composer-save');addStatusEl=documentaddStatusEl=document.getElementById('add-status.getElementById('add-status');
+  composer');
+  composerTrigger=document.getElementById('Trigger=document.getElementById('composer-trigger');composercomposer-trigger');composerDropdown=document.getElementById('Dropdown=document.getElementById('composer-dropdown');composercomposer-dropdown');composerSearchWrap=document.getElementByIdSearchWrap=document.getElementById('composer-search-wrap');composerSearchInput('composer-search-wrap');composerSearchInput=document.getElementById('composer=document.getElementById('composer-search-input');composer-search-input');composerListEl=document.getElementByIdListEl=document.getElementById('composer-list');('composer-list');composerAddNewBtn=document.getElementById('composercomposerAddNewBtn=document.getElementById('composer-add-new');selectedComposerDisplay=document.getElementById-add-new');selectedComposerDisplay=document.getElementById('selected-composer('selected-composer-display');
 
-  // Player refs
-  playerBar = document.getElementById('player-bar');
-  playerSongName = document.getElementById('player-song-name');
-  playerTimes = document.getElementById('player-times');
-  progressFill = document.getElementById('progress-fill');
-  progressContainer = document.getElementById('progress-container');
-  playPauseBtn = document.getElementById('play-pause-btn');
+ -display');
 
-  // Rename refs
-  renameOverlay = document.getElementById('rename-overlay');
-  renameInput = document.getElementById('rename-input');
-  renameSave = document.getElementById('rename-save');
-  renameCancel = document.getElementById('rename-cancel');
+  // Tabs
+  // Tabs
+  tab tabLibrary.onclick=e=>Library.onclick=e=>{e{e.stopPropagation();switchTab('library');};.stopPropagation();switchTab('library');};
+  tabAdd
+  tabAdd.onclick=e=>{.onclick=e=>{e.stopPropagation();switche.stopPropagation();switchTab('add');Tab('add');};
 
-  // Tab refs
-  tabLibrary = document.getElementById('tab-library');
-  tabAdd = document.getElementById('tab-add');
-  viewLibrary = document.getElementById('view-library');
-  viewAdd = document.getElementById('view-add');
+  //};
 
-  // Composer modal refs
-  composerOverlay = document.getElementById('composer-overlay');
-  composerModal = document.getElementById('composer-modal');
-  compFirst = document.getElementById('comp-first');
-  compLast = document.getElementById('comp-last');
-  compCountry = document.getElementById('comp-country');
-  compBirth = document.getElementById('comp-birth');
-  compDeath = document.getElementById('comp-death');
-  catalogueList = document.getElementById('catalogue-list');
-  addCatalogueBtn = document.getElementById('add-catalogue-btn');
-  composerCancel = document.getElementById('composer-cancel');
-  composerSave = document.getElementById('composer-save');
-  addStatusEl = document.getElementById('add-status');
+  // Composer selector
+  Composer selector
+  composerTrigger.addEventListener(' composerTrigger.addEventListener('click', (click', (e) => {e) => {
+    e.stopPropagation
+    e.stopPropagation();
+    composer();
+    composerDropdown.classList.contains('Dropdown.classList.contains('active') ? closeactive') ? closeComposerDropdown() :ComposerDropdown() : openComposerDropdown(); openComposerDropdown();
+  });
 
-  // Tab switching
-  tabLibrary.addEventListener('click', (e) => { e.stopPropagation(); switchTab('library'); });
-  tabAdd.addEventListener('click', (e) => { e.stopPropagation(); switchTab('add'); });
-
-  // Composer modal events
-  document.getElementById('add-composer-trigger').addEventListener('click', openComposerModal);
-  composerCancel.addEventListener('click', closeComposerModal);
-  composerOverlay.addEventListener('click', (e) => { if (e.target === composerOverlay) closeComposerModal(); });
-  addCatalogueBtn.addEventListener('click', addCatalogueInput);
-  composerSave.addEventListener('click', handleComposerSave);
-
-  // Rename modal events
-  renameCancel.addEventListener('click', hideRenameModal);
-  renameOverlay.addEventListener('click', (e) => { if (e.target === renameOverlay) hideRenameModal(); });
-  renameSave.addEventListener('click', async () => {
-    const newName = renameInput.value.trim();
-    if (newName && renameTargetId !== null) {
-      await updateSongName(renameTargetId, newName);
-      if (currentSongId == renameTargetId) {
-        playerSongName.textContent = newName;
-        if ('mediaSession' in navigator) {
-          navigator.mediaSession.metadata = new MediaMetadata({ title: newName, artist: 'Taktwerk', album: 'Local Library' });
-        }
-      }
-      renderLibrary(await loadSongs());
+  });
+  composerSearchInput  composerSearchInput.addEventListener('input',.addEventListener('input', (e) => (e) => filter filterComposers(eComposers(e.target.value));
+.target.value));
+  composerAddNew  composerAddNewBtn.addEventListener('clickBtn.addEventListener('click', () => { closeComposerDropdown();', () => { closeComposerDropdown(); openComposerModal(); openComposerModal(); });
+  // });
+  // Close dropdown on outside Close dropdown on outside click
+  document click
+  document.addEventListener('click',.addEventListener('click', (e) => (e) => {
+    if (composerDropdown.classList {
+    if (composerDropdown.classList.contains('active').contains('active') && !composerDropdown && !composerDropdown.contains(e.target).contains(e.target) && e.target !== && e.target !== composerTrigger) { composerTrigger) {
+     
+      closeComposerDropdown(); closeComposerDropdown();
     }
-    hideRenameModal();
-  });
-  renameInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); renameSave.click(); }
-    if (e.key === 'Escape') hideRenameModal();
+
+    }
   });
 
-  // Player controls
-  progressContainer.addEventListener('click', (e) => {
-    if (!audioPlayer.duration) return;
-    const rect = progressContainer.getBoundingClientRect();
-    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    audioPlayer.currentTime = ratio * audioPlayer.duration;
-  });
-  playPauseBtn.addEventListener('click', () => {
-    if (currentSongId === null) return;
-    audioPlayer.paused ? audioPlayer.play().catch(e => console.error(e)) : audioPlayer.pause();
-  });
-  audioPlayer.addEventListener('timeupdate', () => {
-    if (!audioPlayer.duration) return;
-    updatePlayerUI(audioPlayer.currentTime, audioPlayer.duration - audioPlayer.currentTime, audioPlayer.currentTime / audioPlayer.duration);
-  });
-  audioPlayer.addEventListener('play', () => { playerBar.classList.add('active'); updatePlayPauseIcon(true); });
-  audioPlayer.addEventListener('pause', () => updatePlayPauseIcon(false));
-  audioPlayer.addEventListener('ended', () => {
-    playerBar.classList.remove('active'); currentSongId = null;
-    updatePlayPauseIcon(false); loadSongs().then(songs => renderLibrary(songs));
+  // Composer modal
   });
 
-  // Legacy import (kept for backward compat)
-  const importBtn = document.getElementById('importBtn');
-  const audioPicker = document.getElementById('audioPicker');
-  if (importBtn && audioPicker) {
-    importBtn.addEventListener('click', () => audioPicker.click());
-    audioPicker.addEventListener('change', async (e) => {
-      if (e.target.files.length > 0) { await handleImport(Array.from(e.target.files)); e.target.value = ''; }
-    });
-  }
+  // Composer modal
+  composerCancel.onclick  composerCancel.onclick=closeComposerModal=closeComposerModal;
+  composer;
+  composerOverlay.onclickOverlay.onclick=e=>{if=e=>{if(e.target===composer(e.target===composerOverlay)closeComposerModal();};
+Overlay)closeComposerModal();};
+  addCatalogue  addCatalogueBtn.onclick=addBtn.onclick=addCatalogueInput;CatalogueInput;
+  composerSave
+  composerSave.onclick=handleComposer.onclick=handleComposerSave;
 
-  // Background resume
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && !audioPlayer.paused && currentSongId) audioPlayer.play().catch(() => {});
-  });
+ Save;
 
-  updatePlayPauseIcon(false);
-  renderLibrary(await loadSongs());
-  console.log('[Taktwerk] Step 2: Composer modal ready');
+  // Rename
+  // Rename
+  renameCancel.onclick=hideRenameModal;rename renameCancel.onclick=hideRenameModal;renameOverlay.onclick=e=>Overlay.onclick=e=>{if(e.target{if(e.target===renameOverlay)===renameOverlay)hideRenameModal();hideRenameModal();};
+  rename};
+  renameSave.onclick=asyncSave.onclick=async()=>{const n=re()=>{const n=renameInput.value.trimnameInput.value.trim();if(n&&();if(n&&renameTargetId!==renameTargetId!==null){await updatenull){await updateSongName(renameTargetId,n);ifSongName(renameTargetId,n);if(currentSongId==renameTargetId){(currentSongId==renameTargetId){playerSongName.textContent=n;if('mediaplayerSongName.textContent=n;if('mediaSession'in navigator)navigator.mediaSession.metadataSession'in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:n,artist=new MediaMetadata({title:n,artist:'Taktwerk:'Taktwerk',album:'Local',album:'Local Library'});}renderLibrary(await loadSongs Library'});}renderLibrary(await loadSongs());}hideRename());}hideRenameModal();};
+Modal();};
+  renameInput.onkeydown=e=>{  renameInput.onkeydown=e=>{if(e.key==='if(e.key==='Enter'){e.preventDefaultEnter'){e.preventDefault();renameSave.click();}if(e();renameSave.click();}if(e.key==='Escape')hideRenameModal();.key==='Escape')hideRenameModal();};
+
+  //};
+
+  // Player
+  progress Player
+  progressContainer.onclick=e=>Container.onclick=e=>{if(!audio{if(!audioPlayer.duration)return;Player.duration)return;const r=const r=progressContainer.getBoundingClientRect();progressContainer.getBoundingClientRect();audioPlayer.currentTime=MathaudioPlayer.currentTime=Math.max(0,.max(0,Math.min(1Math.min(1,(e.clientX-r,(e.clientX-r.left)/r.left)/r.width))*audioPlayer.duration;};
+.width))*audioPlayer.duration;};
+  playPauseBtn  playPauseBtn.onclick=()=>{.onclick=()=>{if(currentSongIdif(currentSongId===null)return;===null)return;audioPlayer.paused?audioPlayer.play().audioPlayer.paused?audioPlayer.play().catch(console.error):catch(console.error):audioPlayer.pause();audioPlayer.pause();};
+  audio};
+  audioPlayer.Player.ontimeupdate=()=>{if(!ontimeupdate=()=>{if(!audioPlayer.duration)returnaudioPlayer.duration)return;updatePlayerUI;updatePlayerUI(audioPlayer.currentTime,a(audioPlayer.currentTime,audioPlayer.duration-audioPlayer.duration-audioPlayer.currentTime,audioPlayer.currentTime/audioudioPlayer.currentTime,audioPlayer.currentTime/audioPlayer.duration);};Player.duration);};
+  audioPlayer
+  audioPlayer.onplay=()=>.onplay=()=>{playerBar.classList{playerBar.classList.add('active');.add('active');updatePlayPauseIconupdatePlayPauseIcon(true);};
+(true);};
+  audioPlayer.on  audioPlayer.onpause=()=>updatePlayPauseIcon(falsepause=()=>updatePlayPauseIcon(false);
+  audio);
+  audioPlayer.onended=Player.onended=()=>{playerBar()=>{playerBar.classList.remove('active.classList.remove('active');currentSongId=null;updatePlay');currentSongId=null;updatePlayPauseIcon(false);PauseIcon(false);loadSongs().thenloadSongs().then(renderLibrary);};(renderLibrary);};
+
+  // Legacy
+
+  // Legacy import
+  const import
+  const ib=document.getElementById(' ib=document.getElementById('importBtn'),apimportBtn'),ap=document.getElementById('audio=document.getElementById('audioPicker');
+  if(ib&&apPicker');
+  if(ib&&ap){ib.onclick=){ib.onclick=()=>ap.click()=>ap.click();ap.onchange();ap.onchange=async e=async e=>{if(e=>{if(e.target.files.length>.target.files.length>0){await handle0){await handleImport(Array.from(eImport(Array.from(e.target.files));e.target.files));e.target.value='';.target.value='';}};}
+
+ }};}
+
+  document document.onvisibilitychange=.onvisibilitychange=()=>{if(!()=>{if(!document.hidden&&!audiodocument.hidden&&!audioPlayer.paused&&currentPlayer.paused&&currentSongId)audioSongId)audioPlayer.play().catchPlayer.play().catch(()=>{});};(()=>{});};
+
+  updatePlay
+
+  updatePlayPauseIcon(false);PauseIcon(false);
+  renderLibrary
+  renderLibrary(await loadSongs());(await loadSongs());
+  console.log
+  console.log('[Taktwerk] Step 3('[Taktwerk] Step 3: Composer selector ready: Composer selector ready');
 }
 
+');
+}
+
+initApp();
 initApp();
