@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#ffffff">
   <title>Taktwerk</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="manifest" href="/taktwerk/manifest.json">
+  <link rel="apple-touch-icon" href="/taktwerk/icon-192.png">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -23,7 +23,6 @@
     }
     h1 { margin-bottom: 20px; }
     
-    /* Import Button Styling */
     .import-btn {
       background: #007aff;
       color: white;
@@ -39,7 +38,6 @@
     }
     .import-btn:active { opacity: 0.8; }
 
-    /* Library List Styling */
     #library {
       width: 100%;
       max-width: 600px;
@@ -63,15 +61,18 @@
 <body>
   <h1>Taktwerk</h1>
   
-  <!-- Hidden Input & Visible Button -->
   <input type="file" id="audioPicker" multiple accept="audio/*" style="display:none">
   <button id="importBtn" class="import-btn">Import Songs</button>
   
   <div id="status" class="status-msg"></div>
   
-  <!-- Library List -->
   <ul id="library"></ul>
   
-  <script type="module" src="app.js"></script>
+  <script type="module" src="/taktwerk/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/taktwerk/sw.js');
+    }
+  </script>
 </body>
 </html>
