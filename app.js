@@ -1,4 +1,4 @@
-// app.js - Fixed overlay initialization + touch handling
+// app.js - 650ms long press + subtler darkening
 import { secondsToDecimalMMSS } from '/taktwerk/takt.js';
 
 const DB_NAME = 'TaktwerkDB';
@@ -16,12 +16,10 @@ audioPlayer.preload = 'auto';
 const PLAY_ICON = `<svg viewBox="0 0 24 24" fill="none"><path opacity="0.1" d="M4 5.49683V18.5032C4 20.05 5.68077 21.0113 7.01404 20.227L18.0694 13.7239C19.384 12.9506 19.384 11.0494 18.0694 10.2761L7.01404 3.77296C5.68077 2.98869 4 3.95 4 5.49683Z" fill="currentColor"/><path d="M4 5.49683V18.5032C4 20.05 5.68077 21.0113 7.01404 20.227L18.0694 13.7239C19.384 12.9506 19.384 11.0494 18.0694 10.2761L7.01404 3.77296C5.68077 2.98869 4 3.95 4 5.49683Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const PAUSE_ICON = `<svg viewBox="0 0 24 24" fill="none"><path opacity="0.1" d="M14 19L14 5C14 3.89543 14.8954 3 16 3L17 3C18.1046 3 19 3.89543 19 5L19 19C19 20.1046 18.1046 21 17 21L16 21C14.8954 21 14 20.1046 14 19Z" fill="currentColor"/><path opacity="0.1" d="M10 19L10 5C10 3.89543 9.10457 3 8 3L7 3C5.89543 3 5 3.89543 5 5L5 19C5 20.1046 5.89543 21 7 21L8 21C9.10457 21 10 20.1046 10 19Z" fill="currentColor"/><path d="M14 19L14 5C14 3.89543 14.8954 3 16 3L17 3C18.1046 3 19 3.89543 19 5L19 19C19 20.1046 18.1046 21 17 21L16 21C14.8954 21 14 20.1046 14 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19L10 5C10 3.89543 9.10457 3 8 3L7 3C5.89543 3 5 3.89543 5 5L5 19C5 20.1046 5.89543 21 7 21L8 21C9.10457 21 10 20.1046 10 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-// DOM references assigned in initApp()
 let playerBar, playerSongName, playerTimes, progressFill, progressContainer, playPauseBtn;
 let actionOverlay, actionSheetTitle, actionRename, actionDelete, actionCancel;
 let renameOverlay, renameInput, renameSave, renameCancel;
 
-// --- IndexedDB ---
 async function initDB() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -105,7 +103,6 @@ async function loadSongs() {
   });
 }
 
-// --- Player UI ---
 function updatePlayerUI(elapsed, remaining, progress) {
   playerTimes.textContent = `${secondsToDecimalMMSS(elapsed)} / ${secondsToDecimalMMSS(elapsed + remaining)}`;
   progressFill.style.width = `${(progress * 100).toFixed(2)}%`;
@@ -153,9 +150,7 @@ function togglePlayback(songId) {
   }
 }
 
-// --- Action Sheet & Rename ---
 function showActionSheet(songId, songName) {
-  console.log('[Taktwerk] Showing action sheet for:', songName);
   activeSongId = songId;
   actionSheetTitle.textContent = songName;
   actionOverlay.classList.add('active');
@@ -176,7 +171,6 @@ function hideRenameModal() {
   renameOverlay.classList.remove('active');
 }
 
-// --- Library Rendering ---
 function renderLibrary(songs) {
   const libraryEl = document.getElementById('library');
   libraryEl.innerHTML = '';
@@ -195,14 +189,13 @@ function renderLibrary(songs) {
       </div>
     `;
 
-    // Long press (1500ms) with progressive darkening - NO passive flag
+    // 650ms long press with matched CSS transition
     li.addEventListener('touchstart', () => {
       li.classList.add('pressing');
       longPressTimer = setTimeout(() => {
-        console.log('[Taktwerk] Long press triggered for:', song.name);
         li.classList.remove('pressing');
         showActionSheet(song.id, song.name);
-      }, 1500);
+      }, 650);
     });
 
     li.addEventListener('touchend', () => {
@@ -218,14 +211,11 @@ function renderLibrary(songs) {
       li.classList.remove('pressing');
     });
 
-    // Normal tap to play
     li.addEventListener('click', () => togglePlayback(song.id));
-
     libraryEl.appendChild(li);
   });
 }
 
-// --- Import ---
 async function handleImport(files) {
   const statusEl = document.getElementById('status');
   statusEl.textContent = `Importing ${files.length} songs...`;
@@ -249,11 +239,9 @@ async function handleImport(files) {
   }
 }
 
-// --- Init ---
 async function initApp() {
   await initDB();
 
-  // Assign ALL DOM references AFTER DB is ready
   playerBar = document.getElementById('player-bar');
   playerSongName = document.getElementById('player-song-name');
   playerTimes = document.getElementById('player-times');
@@ -270,14 +258,11 @@ async function initApp() {
   renameSave = document.getElementById('rename-save');
   renameCancel = document.getElementById('rename-cancel');
 
-  // Verify critical elements exist
   if (!actionOverlay || !actionRename || !actionDelete) {
     console.error('[Taktwerk] CRITICAL: Overlay elements not found in DOM!');
     return;
   }
-  console.log('[Taktwerk] All DOM elements found successfully');
 
-  // Wire up overlay buttons
   actionCancel.addEventListener('click', hideActionSheet);
   actionOverlay.addEventListener('click', (e) => { if (e.target === actionOverlay) hideActionSheet(); });
 
@@ -327,7 +312,6 @@ async function initApp() {
     if (e.key === 'Escape') hideRenameModal();
   });
 
-  // Player controls
   progressContainer.addEventListener('click', (e) => {
     if (!audioPlayer.duration) return;
     const rect = progressContainer.getBoundingClientRect();
@@ -361,7 +345,6 @@ async function initApp() {
     loadSongs().then(songs => renderLibrary(songs));
   });
 
-  // Import
   const importBtn = document.getElementById('importBtn');
   const audioPicker = document.getElementById('audioPicker');
   importBtn.addEventListener('click', () => audioPicker.click());
@@ -372,7 +355,6 @@ async function initApp() {
     }
   });
 
-  // Background resume
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && !audioPlayer.paused && currentSongId) {
       audioPlayer.play().catch(() => {});
@@ -382,7 +364,6 @@ async function initApp() {
   updatePlayPauseIcon(false);
   const songs = await loadSongs();
   renderLibrary(songs);
-  console.log('[Taktwerk] App initialized successfully');
 }
 
 initApp();
