@@ -1,4 +1,4 @@
-// app.js - Inline context menu replacing overlay action sheet
+// app.js - Tap-to-dismiss on active song
 import { secondsToDecimalMMSS } from '/taktwerk/takt.js';
 
 const DB_NAME = 'TaktwerkDB';
@@ -8,7 +8,7 @@ const STORE_NAME = 'songs';
 let db;
 let currentSongId = null;
 let longPressTimer = null;
-let activeContextMenu = null; // Tracks currently open inline menu
+let activeContextMenu = null;
 
 const audioPlayer = new Audio();
 audioPlayer.preload = 'auto';
@@ -171,18 +171,13 @@ function dismissContextMenu() {
     activeContextMenu.remove();
     activeContextMenu = null;
   }
-  // Remove menu-open class from all song items
   document.querySelectorAll('.song-item.menu-open').forEach(el => el.classList.remove('menu-open'));
 }
 
 function showContextMenu(songId, songName, songElement) {
-  // Dismiss any existing menu first
   dismissContextMenu();
-
-  // Mark song as having menu open (adjusts border radius)
   songElement.classList.add('menu-open');
 
-  // Create inline menu
   const menu = document.createElement('div');
   menu.className = 'context-menu';
   menu.innerHTML = `
@@ -190,11 +185,9 @@ function showContextMenu(songId, songName, songElement) {
     <button data-action="delete" class="btn-danger">Delete</button>
   `;
 
-  // Insert menu directly after the song item in the DOM
   songElement.parentNode.insertBefore(menu, songElement.nextSibling);
   activeContextMenu = menu;
 
-  // Handle menu button clicks
   menu.querySelector('[data-action="rename"]').addEventListener('click', async () => {
     dismissContextMenu();
     showRenameModal(songId, songName);
@@ -214,7 +207,7 @@ function showContextMenu(songId, songName, songElement) {
   });
 }
 
-// Dismiss menu when tapping anywhere outside
+// Dismiss menu when tapping outside songs
 document.addEventListener('click', (e) => {
   if (activeContextMenu && !activeContextMenu.contains(e.target) && !e.target.closest('.song-item')) {
     dismissContextMenu();
@@ -255,7 +248,6 @@ function renderLibrary(songs) {
       </div>
     `;
 
-    // Long press shows inline context menu
     li.addEventListener('touchstart', () => {
       li.classList.add('pressing');
       longPressTimer = setTimeout(() => {
@@ -269,9 +261,12 @@ function renderLibrary(songs) {
     li.addEventListener('touchcancel', () => { clearTimeout(longPressTimer); li.classList.remove('pressing'); });
     li.addEventListener('touchmove', () => { clearTimeout(longPressTimer); li.classList.remove('pressing'); });
 
-    // Normal tap plays (unless context menu is open on this item)
+    // FIXED: Tap on song with open menu only dismisses, no playback change
     li.addEventListener('click', () => {
-      if (activeContextMenu && li.classList.contains('menu-open')) return;
+      if (activeContextMenu && li.classList.contains('menu-open')) {
+        dismissContextMenu();
+        return;
+      }
       togglePlayback(song.id);
     });
 
@@ -319,11 +314,9 @@ async function initApp() {
   viewLibrary = document.getElementById('view-library');
   viewAdd = document.getElementById('view-add');
 
-  // Tab switching
   tabLibrary.addEventListener('click', (e) => { e.stopPropagation(); switchTab('library'); });
   tabAdd.addEventListener('click', (e) => { e.stopPropagation(); switchTab('add'); });
 
-  // Rename modal handlers
   renameCancel.addEventListener('click', hideRenameModal);
   renameOverlay.addEventListener('click', (e) => { if (e.target === renameOverlay) hideRenameModal(); });
 
@@ -348,7 +341,6 @@ async function initApp() {
     if (e.key === 'Escape') hideRenameModal();
   });
 
-  // Player controls
   progressContainer.addEventListener('click', (e) => {
     if (!audioPlayer.duration) return;
     const rect = progressContainer.getBoundingClientRect();
@@ -382,7 +374,6 @@ async function initApp() {
     loadSongs().then(songs => renderLibrary(songs));
   });
 
-  // Import
   const importBtn = document.getElementById('importBtn');
   const audioPicker = document.getElementById('audioPicker');
   importBtn.addEventListener('click', () => audioPicker.click());
@@ -393,7 +384,6 @@ async function initApp() {
     }
   });
 
-  // Background resume
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && !audioPlayer.paused && currentSongId) {
       audioPlayer.play().catch(() => {});
