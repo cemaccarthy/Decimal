@@ -1,21 +1,73 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <button class="tab-btn" id="tab-add">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="14" height="14" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 21H17a4 4 0 0 0 4-4V5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Add Music
+    </button>
+  </div>
+
+  <div id="view-library" class="view active">
+    <ul id="library-list"></ul>
+  </div>
+
+  <div id="view-add" class="view">
+    <div style="position:relative; width:100%; max-width:300px; margin-bottom:12px;">
+      <button id="composer-trigger" class="composer-selector-trigger placeholder">Select Composer</button>
+      <div id="composer-dropdown" class="composer-dropdown">
+        <div id="composer-search-wrap" class="composer-search" style="display:none;">
+          <input type="text" id="composer-search-input" placeholder="Search composers..." autocomplete="off">
+        </div>
+        <div id="composer-list" class="composer-list"></div>
+        <div id="composer-add-new" class="composer-add-new">+ Add New Composer</div>
+      </div>
+    </div>
+    <div id="selected-composer-display" class="status-msg"></div>
+
+    <input type="file" id="audioPicker" multiple accept=".mp3,.aac,.wav,.aiff,.flac,.alac" style="display:none">
+    <button id="importBtn" class="import-btn" style="display:none;">Select Songs</button>
+    <div id="status" class="status-msg"></div>
+    <div id="add-status" class="status-msg"></div>
+  </div>
+
+  <!-- Composer Creation Modal -->
+  <div id="composer-overlay" class="overlay">
+    <div class="modal" id="composer-modal">
+      <h3>Add New Composer</h3>
+      <label for="comp-first">First Name *</label>
+      <input type="text" id="comp-first" autocomplete="off">
+      <label for="comp-last">Last Name *</label>
+      <input type="text" id="comp-last" autocomplete="off">
+      <label for="comp-country">Country of Origin *</label>
+      <input type="text" id="comp-country" autocomplete="off">
+      <div class="modal-row">
+        <div><label for="comp-birth">Birth Year *</label><input type="number" id="comp-birth" inputmode="numeric" autocomplete="off"></div>
+        <div><label for="comp-death">Death Year *</label><input type="number" id="comp-death" inputmode="numeric" autocomplete="off"></div>
+      </div>
+      <div class="catalogue-section">
+        <div class="catalogue-section-title">Catalogues (optional)</div>
+        <div id="catalogue-list"></div>
+        <button type="button" class="add-catalogue-btn" id="add-catalogue-btn">+ Add Catalogue</button>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="composer-cancel">
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-colorCancel</button>
+        <button" content="#ffffff">
   <title>Taktwerk</title>
   <link rel="manifest" href="/taktwerk/manifest.json">
   <link rel="apple-touch-icon" href="/taktwerk/icon-192.png">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
-      font-family: -apple-system, system-ui, sans-serif; 
+      class="btn-save" id="composer font-family: -apple-system, system-ui, sans-serif; 
       background: #ffffff; color: #1d1d1f;
       min-height: 100dvh; 
-      padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 160px);
+      padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 160-save">Save</button>
+      </div>
+    </div>px);
       display: flex; flex-direction: column; align-items: center;
       -webkit-user-select: none; user-select: none;
     }
@@ -24,7 +76,8 @@
     .tab-bar {
       display: flex; width: 100%; max-width: 300px; margin-bottom: 20px;
       border: 2px solid #000; border-radius: 12px; overflow: hidden;
-    }
+   
+  </div }
     .tab-btn {
       flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
       padding: 12px; border: none; background: #fff; font-size: 14px; font-weight: 600;
@@ -55,248 +108,20 @@
       -webkit-user-select: none; user-select: none; transition: background 0.15s ease;
     }
     .song-item.pressing { background: #c7c7cc; transition: background 0.4s ease; }
-    .song-item.menu-open { border-radius: 10px 10px 0 0; margin-bottom: 0; }
-    .song-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-    .song-name { font-weight: 500; font-size: 16px; }
-    .song-duration { font-size: 13px; color: #6e6e73; margin-top: 2px; }
-    .status-msg { margin-top: 10px; font-size: 14px; color: #6e6e73; text-align: center; }
-
-    .context-menu {
-      background: #fff; border: 1px solid #e5e5ea; border-top: none;
-      border-radius: 0 0 10px 10px; margin-top: 0; margin-bottom: 8px;
-      overflow: hidden; animation: slideDown 0.15s ease; width: 100%;
-    }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-    .context-menu button {
-      width: 100%; padding: 14px 16px; border: none; background: none;
-      font-size: 15px; cursor: pointer; text-align: left;
-      font-family: inherit; color: #1d1d1f; border-bottom: 1px solid #f0f0f0;
-    }
-    .context-menu button:last-child { border-bottom: none; }
-    .context-menu button:active { background: #f5f5f7; }
-    .context-menu .btn-danger { color: #ff3b30; }
-
-    /* Overlays */
-    .overlay {
-      position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
-      background: rgba(0,0,0,0.4); z-index: 9999 !important;
-      display: none; align-items: center; justify-content: center;
-    }
-    .overlay.active { display: flex !important; animation: fadeIn 0.2s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-    /* Shared modal styles */
-    .modal {
-      background: #fff; border-radius: 14px; width: 320px; padding: 24px;
-      animation: scaleIn 0.2s ease; max-height: 85vh; overflow-y: auto;
-      -webkit-user-select: none; user-select: none;
-    }
-    .modal h3 { font-size: 17px; margin-bottom: 16px; text-align: center; }
-    .modal label { display: block; font-size: 13px; color: #6e6e73; margin-bottom: 4px; margin-top: 12px; }
-    .modal label:first-of-type { margin-top: 0; }
-    .modal input {
-      width: 100%; padding: 10px; font-size: 16px; border: 1px solid #e5e5ea;
-      border-radius: 8px; font-family: inherit; outline: none;
-      -webkit-user-select: text; user-select: text;
-    }
-    .modal input:focus { border-color: #007aff; }
-    .modal-row { display: flex; gap: 8px; }
-    .modal-row > div { flex: 1; }
-    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
-    .modal-actions button {
-      padding: 10px 20px; border-radius: 8px; border: none; font-size: 15px;
-      cursor: pointer; font-family: inherit; font-weight: 500;
-    }
-    .btn-cancel { background: #f5f5f7; color: #1d1d1f; }
-    .btn-save { background: #007aff; color: #fff; }
-
-    /* Catalogue section */
-    .catalogue-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e5ea; }
-    .catalogue-section-title { font-size: 13px; color: #6e6e73; margin-bottom: 8px; }
-    .catalogue-entry { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
-    .catalogue-entry input { flex: 1; }
-    .catalogue-remove {
-      width: 28px; height: 28px; border-radius: 50%; border: none;
-      background: #f5f5f7; color: #6e6e73; font-size: 16px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .catalogue-remove:active { background: #e5e5ea; }
-    .add-catalogue-btn {
-      width: 100%; padding: 10px; border: 1px dashed #007aff; border-radius: 8px;
-      background: none; color: #007aff; font-size: 14px; font-weight: 500;
-      cursor: pointer; font-family: inherit; margin-top: 4px;
-    }
-    .add-catalogue-btn:active { background: #f0f7ff; }
-
-    /* Composer Selector Dropdown */
-    .composer-selector-trigger {
-      width: 100%; max-width: 300px; padding: 12px 16px; border: 1px solid #e5e5ea;
-      border-radius: 10px; background: #fff; font-size: 15px; color: #1d1d1f;
-      cursor: pointer; text-align: left; font-family: inherit;
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 12px; -webkit-tap-highlight-color: transparent;
-    }
-    .composer-selector-trigger.placeholder { color: #6e6e73; }
-    .composer-selector-trigger::after { content: '▼'; font-size: 10px; color: #6e6e73; }
-    .composer-dropdown {
-      position: absolute; z-index: 10000; background: #fff;
-      border: 1px solid #e5e5ea; border-radius: 10px;
-      width: 300px; max-height: 320px; overflow-y: auto;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-      display: none; flex-direction: column;
-    }
-    .composer-dropdown.active { display: flex; }
-    .composer-search {
-      padding: 10px 12px; border-bottom: 1px solid #e5e5ea;
-      position: sticky; top: 0; background: #fff; z-index: 1;
-    }
-    .composer-search input {
-      width: 100%; padding: 8px 10px; font-size: 14px; border: 1px solid #e5e5ea;
-      border-radius: 6px; outline: none; font-family: inherit;
-      -webkit-user-select: text; user-select: text;
-    }
-    .composer-search input:focus { border-color: #007aff; }
-    .composer-list { flex: 1; overflow-y: auto; }
-    .composer-option {
-      padding: 12px 16px; font-size: 15px; cursor: pointer;
-      border-bottom: 1px solid #f5f5f7; -webkit-tap-highlight-color: transparent;
-    }
-    .composer-option:last-child { border-bottom: none; }
-    .composer-option:active { background: #f5f5f7; }
-    .composer-empty { padding: 16px; text-align: center; color: #6e6e73; font-size: 14px; }
-    .composer-add-new {
-      padding: 12px 16px; border-top: 1px solid #e5e5ea;
-      color: #007aff; font-size: 14px; font-weight: 600;
-      cursor: pointer; text-align: center; background: #fafafa;
-      border-radius: 0 0 10px 10px; -webkit-tap-highlight-color: transparent;
-    }
-    .composer-add-new:active { background: #f0f7ff; }
-
-    /* Rename modal */
-    .rename-modal {
-      background: #fff; border-radius: 14px; width: 300px; padding: 24px;
-      animation: scaleIn 0.2s ease;
-    }
-    .rename-modal h3 { font-size: 17px; margin-bottom: 4px; }
-    .rename-modal input {
-      width: 100%; padding: 10px; font-size: 16px; border: 1px solid #e5e5ea;
-      border-radius: 8px; margin: 12px 0; font-family: inherit; outline: none;
-      -webkit-user-select: text; user-select: text;
-    }
-    .rename-modal input:focus { border-color: #007aff; }
-    .rename-modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
-    .rename-modal-actions button {
-      padding: 8px 16px; border-radius: 8px; border: none; font-size: 15px;
-      cursor: pointer; font-family: inherit;
-    }
-
-    #player-bar {
-      position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
-      border-top: 1px solid #e5e5ea;
-      padding: 20px 24px calc(20px + env(safe-area-inset-bottom));
-      display: none; flex-direction: column; gap: 14px; z-index: 100;
-    }
-    #player-bar.active { display: flex; }
-    .player-song-name {
-      font-weight: 600; font-size: 18px; white-space: nowrap; overflow: hidden;
-      text-overflow: ellipsis; text-align: center; width: 100%;
-    }
-    .player-times { color: #6e6e73; font-variant-numeric: tabular-nums; font-size: 16px; text-align: center; }
-    .progress-container {
-      width: 100%; height: 32px; display: flex; align-items: center;
-      cursor: pointer; -webkit-tap-highlight-color: transparent;
-    }
-    .progress-track {
-      width: 100%; height: 6px; background: #e5e5ea; border-radius: 3px;
-      position: relative; overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%; background: #007aff; border-radius: 3px;
-      width: 0%; transition: width 0.1s linear;
-    }
-    .player-controls { display: flex; justify-content: center; align-items: center; gap: 24px; }
-    .control-btn {
-      background: none; border: none; cursor: pointer; padding: 8px;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .control-btn svg { width: 36px; height: 36px; fill: #007aff; }
-    .control-btn:active svg { opacity: 0.6; }
-  </style>
-</head>
-<body>
-  <h1>Taktwerk</h1>
-
-  <div class="tab-bar">
-    <button class="tab-btn active" id="tab-library">
-      <svg viewBox="0 0 24 24" fill="none"><path opacity="0.1" d="M4 9V16C4 17.8856 4 18.8284 4.58579 19.4142C5.17157 20 6.11438 20 8 20H16C17.8856 20 18.8284 20 19.4142 19.4142C20 18.8284 20 17.8856 20 16V9H4Z" fill="currentColor"/><path d="M9 13H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 6.5C3 6.03534 3 5.80302 3.03843 5.60982C3.19624 4.81644 3.81644 4.19624 4.60982 4.03843C4.80302 4 5.03534 4 5.5 4H12H18.5C18.9647 4 19.197 4 19.3902 4.03843C20.1836 4.19624 20.8038 4.81644 20.9616 5.60982C21 5.80302 21 6.03534 21 6.5V6.5V6.5C21 6.96466 21 7.19698 20.9616 7.39018C20.8038 8.18356 20.1836 8.80376 19.3902 8.96157C19.197 9 18.9647 9 18.5 9H12H5.5C5.03534 9 4.80302 9 4.60982 8.96157C3.81644 8.80376 3.19624 8.18356 3.03843 7.39018C3 7.19698 3 6.96466 3 6.5V6.5V6.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M4 9V15.9999C4 17.8856 4 18.8284 4.58579 19.4142C5.17157 19.9999 6.11438 19.9999 8 19.9999H9H15H16C17.8856 19.9999 18.8284 19.9999 19.4142 19.4142C20 18.8284 20 17.8856 20 15.9999V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Library
-    </button>
-    <button class="tab-btn" id="tab-add">
-      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="14" height="14" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 21H17a4 4 0 0 0 4-4V5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Add Music
-    </button>
-  </div>
-
-  <div id="view-library" class="view active">
-    <ul id="library-list"></ul>
-  </div>
-
-  <div id="view-add" class="view">
-    <!-- Composer Selector (standalone for testing) -->
-    <div style="position:relative; width:100%; max-width:300px; margin-bottom:12px;">
-      <button id="composer-trigger" class="composer-selector-trigger placeholder">Select Composer</button>
-      <div id="composer-dropdown" class="composer-dropdown">
-        <div id="composer-search-wrap" class="composer-search" style="display:none;">
-          <input type="text" id="composer-search-input" placeholder="Search composers..." autocomplete="off">
-        </div>
-        <div id="composer-list" class="composer-list"></div>
-        <div id="composer-add-new" class="composer-add-new">+ Add New Composer</div>
-      </div>
-    </div>
-    <div id="selected-composer-display" class="status-msg"></div>
-
-    <!-- Legacy import (kept) -->
-    <input type="file" id="audioPicker" multiple accept=".mp3,.aac,.wav,.aiff,.flac,.alac" style="display:none">
-    <button id="importBtn" class="import-btn" style="display:none;">Select Songs</button>
-    <div id="status" class="status-msg"></div>
-    <div id="add-status" class="status-msg"></div>
-  </div>
-
-  <!-- Composer Creation Modal -->
-  <div id="composer-overlay" class="overlay">
-    <div class="modal" id="composer-modal">
-      <h3>Add New Composer</h3>
-      <label for="comp-first">First Name *</label>
-      <input type="text" id="comp-first" autocomplete="off">
-      <label for="comp-last">Last Name *</label>
-      <input type="text" id="comp-last" autocomplete="off">
-      <label for="comp-country">Country of Origin *</label>
-      <input type="text" id="comp-country" autocomplete="off">
-      <div class="modal-row">
-        <div><label for="comp-birth">Birth Year *</label><input type="number" id="comp-birth" inputmode="numeric" autocomplete="off"></div>
-        <div><label for="comp-death">Death Year *</label><input type="number" id="comp-death" inputmode="numeric" autocomplete="off"></div>
-      </div>
-      <div class="catalogue-section">
-        <div class="catalogue-section-title">Catalogues (optional)</div>
-        <div id="catalogue-list"></div>
-        <button type="button" class="add-catalogue-btn" id="add-catalogue-btn">+ Add Catalogue</button>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-cancel" id="composer-cancel">Cancel</button>
-        <button class="btn-save" id="composer-save">Save</button>
-      </div>
-    </div>
-  </div>
+    .song-item.menu-open { border-radius: 10px 10px 0 0;>
 
   <!-- Rename Modal -->
   <div id="rename-overlay" class="overlay">
-    <div class="rename-modal">
-      <h3>Rename Song</h3>
+    <div class="rename-modal margin-bottom: ">
+      0; }
+    .song-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+    .song-name { font-weight: <h3>Rename Song</h3>
       <input type="text" id="rename-input" autocomplete="off">
       <div class="rename-modal-actions">
-        <button class="btn-cancel" id="rename-cancel">Cancel</button>
-        <button class="btn-save" id="rename-save">Save</button>
+        <button class="btn-cancel500;" id="rename-cancel">Cancel</button>
+        font-size: 16px; }
+    . <button class="song-duration { fontbtn-save" id-size: 13px; color: #6e6e73; margin-top: 2px; }
+    .status-msg { margin-top: 1="rename-save">Save</button>
       </div>
     </div>
   </div>
@@ -313,6 +138,15 @@
   </div>
   
   <script type="module" src="/taktwerk/app.js"></script>
-  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/taktwerk/sw.js');</script>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker0px; font.register('/taktwerk-size: 14px; color: #6e6e73; text-align: center; }
+
+    .context-menu {
+      background: #fff; border: 1px solid #e5e5ea; border-top: none;
+      border-radius: 0 0 10px 10px; margin-top: 0; margin-bottom: 8px;
+      overflow: hidden; animation: slideDown 0.15s ease; width: 100%;
+    }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+    .context-menu button {
+      width: 100%; padding: 14/sw.js');</scriptpx 16px; border:>
 </body>
 </html>
