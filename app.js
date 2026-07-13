@@ -1,4 +1,4 @@
-// app.js - Sound effect + text selection fix
+// app.js - Pre-trigger sound + haptic feedback
 import { secondsToDecimalMMSS } from '/taktwerk/takt.js';
 
 const DB_NAME = 'TaktwerkDB';
@@ -13,369 +13,35 @@ let activeSongId = null;
 const audioPlayer = new Audio();
 audioPlayer.preload = 'auto';
 
-// Preloaded action sheet sound effect
-const ACTION_SOUND_BASE64 = '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';
-const ACTION_SOUND = new Audio(`data:audio/mp3;base64,${ACTION_SOUND_BASE64}`);
-ACTION_SOUND.volume = 0.6;
-ACTION_SOUND.preload = 'auto';
+const ACTION_SOUND_BASE64 = '//vUxAABZ2noyiw/N4XdPZ+hrOr4IBiLBmaseY4tdQRSt4m+dRh7MHRd5tW2Zqpan0qFWpVin1epBERB5AQstIluvphrEl6qxiHkgOVHLLSsKtQMivXDK5OEeaO/gVtK1Lk3ilF4Qs5G+FMpz2NUYhBzYOVDjpLcOERMFeFYTtOMcDb1bOs/FyzOLm4OcSK5OnNkY0gnU2cagY2yDHUh6mUR5JC5l8N82ChG8HgDQDjP5UuU0aK5NKoQ9wGfsKUxSSQsL8JFuBvGjij9w5yOPW3RVMqCCBM0UieA+BjhRMIRHthjE2WLrUAXg1lb6PhasQGDjZotFNB+HHCuBCEQ1DFH19MNYsx9tIXGXaaysMiiRFg5MAAIzrKXilsIAzFAHsAFwZYqAhosPP49LElaEzFruJPy1+mzM3bR5W2bVvmgLrUwWWy5UaxH3oLtz+W80JQGFEhUAYo0bCAbQU6YNImnWmfQmwJEoNRFaBZAVNmzUhAIvRGowFCRrFwOWQwhMBwSCDJoTLhUAblPK2xZgLlTNi0oUvy5au4WrY2koqwSqeB+7mmWNze5icFOSYKZsppstcaQkQAQQEGguy+DHBLlpFt+qeebuj+BGjiWAxjHHHnEJ6I8MWW6FsFYJW/kUr4PvLqWX4ZOA7j+RR411ogI0F1GKWow0gv4g4wSGHXbggEZij/G0M1hkNHfUzaHDjpsTL3lr3XkC502jEAQ0gV10vHhZ6zd2I6qcgCNBIzAkkKeSKPqvZIsPD4hHN+EIsMRYHQNhMKZM2NLbmBEmLBpIQICTIQ/M0uCGiq5hTpwZJxgiX4FFhhdLx3Vb0U4lG2d07rgQgTFDAgVhjDCASENEwNcYSglcXEAQIKAUKsV0gYGMUEYo0tCW26E9FgqgDJDFcwMp2Bga2mWlxHZb9HiHUEBfi2hghGXMVpSLl2aaCVlFcjF5SGIDBwIYqRnBGIC0gEoDAo86OgpLJgl1UXYEBSSa4VMCqJYKtFBCqSb4RyQgAQBP0uAhAhSn4oO//vUxBwA7vXtCAzjN8W2PaFhnGb4CjUAJaZMIKIQRuMgHEnxJFBmCaIOWgLZu5DD2CN0cVGlLxIlYYGEZQKjbu8ax0x3QQSpbkhFbXWEAR4ymqaw6RGcWeBjI2JSChwwy3FbngVY2t6eXWwqTS1uTuzFyFQ5yUNuyhdUNM9SqYKXfi7oLCL7ElpuuMouNLATBIJasLYS8VVWLJSB5CQ4AX2iuZBDzUvXSgZAOgiNCBEJbLaGQSAECyiqRZephi7xa6I0JctYQ1vX2hoOtJnD1QTJ40eQSQtc43wQcAoSRwboMsccSMNIKAmAECujASPwRXphsiaolQr15m9YUSCIvNHlYceZqICRLoEh5acHHK3GMUrYFRRIogNMds0iWImGKBiERVh1ko8Q+FCQCJUQZC4JfyAFXIzpspmrQAobXQaINALaSfEk3XLztBWdDzO3lhiWVugJIAMjCOJaxVfbo3UGNNzb4zSVLIJAgRESgoWZokE4CMEayLjRUEykg5URGlzg41nifA4FKmHqbK+iMHw/SNIediSq9dPUvtAbMC+yYzIH6nAcMKAfxubUhUyIqrXmV4kigEkCm6D78w+JGd0VWClG0iAdka51bhA9TkKhTjVIyyeZc2Bu8MQbJM5a7GFNLLV2G4FeiQs7kKgEBMqZNeZ+slA9iCwCNS0Fxp8MjTOVTWg/pbNiSmqPrpvGmskYommQWfg8UQjPaLUPyiuFgoboljwEyk1FAUaRgCtKX79L/Mp24JJMeWw7QUSJOVkByyDCqAsiZNQ4AQooDDFVM54z2BZdHwBpnQkEQnJCOojSCjxiBBhCxEvgaKqmoCpamgZQwORnghh10SCQwVeEBQGlgAQgmiARghxSPwIPAB7OVltTQBt8k/KE9wcclSpqTDNIRUii3oMWikUvBTQECvYmGoS1C6UAICHSb2PWbCoKJEAAa0ZpBzLAkItuFgmBBVVqyBQGVRNW8WtSoQEpMBgCvHEdISelSYTGm8R8XgtduCjivGDvq3rcGDy5//vUxB6A7R3tDwzjN8YgvaEVrGa62k8Fb4ZeSJsdV0oEWAMwgRTR8l9KCKPk0lprHSqU3fAmKkU1RJ171RJ17AQt1CAQt1C9xf9y9xf9yUZ5emMUZ5emMnuNDY8nuNDY8nYhuXvVUTGYOj07nYhuXvVUTGYOj078EJKuu8EJKuu9kPNZ9kPNZbDQQ1bDQQ1Aj8OxEAj8OxEKW1Bz8y1yKW1Bz8y1y3KfB3KfB47bpPM47bpPMsRmTYsRmTYHuV24HuV24Sez/JHSSez/JHS5lqlza5lqlzaN1RuIRN1RuIRIC0+GMIC0+GMJ8ILoJ8ILoSmAryFSmAryFBNQXvBNQXvOroR0OroR0YxtkLYxtkLgqHpNgqHpNpOtdVpOtdVXSnYHEXSnYHEyJwiMXyJwiMXLMgkfpLMgkfpUjq7wUjq7wOYjYOYjYje45jje45jCCizJZZCCizJZZuXwUBuXwUBHkUCSKHkUCSKRgAGQRgAGQgDlSGgDlSG4ErCgo4ErCgoOXB9giOXB9giIXSJYGWGIXSJYGWGiqgu9qliqgu9qlSSSEtXTSSSEtXTFzCMLFzCMLYCzrXYCzrXlBx5lBx50IJfBV0IJfBVghFSaLyghFSaLyA5h+A5h+0eUUm0eUUm5gocg5gocgCGhhUIFWCGhhUIFWJaJVt2JaJVt2Xo46Xo46SiVC7CSiVC7C3DOECKmb3DOECKmbGn8QRGn8QRroZ1DroZ1DZfROZZfROZPWUz9PWUz9lqCmlqCmCwUvpCwUvp5DgIA5DgIAgPnfzmgPnfzmOXmnQoxOXmnQoxAAkASgAAkASgJCCMOPIJCCMOPIBUa4xBUa4xCIQiFDKICIQiFDKI4qbKAyj4qbKAyjwORGGEkwORGGEkAQRhwoAQRhwoDMMMJnDMMMJnBENT6THBENT6THbaDGkptbaDGkptN3cBON3cBOt2hCIt2hCIlAArMtlAArMtAx4FaPJAx4FaPJU4Vdqx9QRqGD1ggIU4Vdqx9QRqGD1ggIjGOrATjGOrAT3RHLg3RHLgECX5hECX5hK2kRWK2kRWESHlqfESHlqf6cCMh6cCMhKEFIHxKEFIHxJ4vyBJ4vyB5Dggq5DggqJG4woJG4woMBxkAsMBxkAsFr1KlFr1Kl1KQQNo1KQQNo7VXlia7VXliaVadKlbVadKlbjP1P07Z4y5EofjP1P07Z4y5Eofh9ckwh9ckwrcRmFBrcRmFBkO4XkO4XGYBodVGYBodV9FAxgb9FAxgbTXzYcTXzYc/SByqz/SByqzMBgxvoTIMMBgxvoTIMZggwkEZggwkEAgYshODAgYshODtiRoFBzU9UtStiRoFBzU9UtS9CZ59CZ5ekuQiumAnekuQiumAn1BZa1BZaCGzCHMECGzCHMEBCcXZBCcXZMwIZVMwIZVHiGVCBHiGVCBUEmAm5UEmAm5NAzlCQNAzlCQcFMGsacFMGsaYUZA6YUZA6A1Q6A1Q6SRF4ZSRF4ZCLGnnERCLGnnERIGMMMGnIGMMMGnKwWoADKwWoADZizgx0Zizgx0HakIREkHakIREkbyrj0byrj0QqOYQqOYpRWiBTpRWiBTzCCIEDPEzCCIEDPELtiA1LtiA1YpkAgZYpkAgZgCgGgCgG5mdCYR5mdCYRwpqoiFowpqoiFoRxgUSAsRxgUSAsiph4QRGoiph4QRGoDTACXsDTACXsEPmkONMEPmkONMCR75KCR75KqqsIUFlqqsIUFlsHUuHsHUuHhiZVBVNhiZVBVN0GhI0GhIbrZXUFnbrZXUFnWKwOuVWKwOuVXa3FGXa3FGHOjtBoGBHOjtBoGBAAASROY0AAASROY0rDOEdKrDOEdKwwVSoMwwVSoMzQ1DzQ1Dg4NUSg4NUSKCuknFKCuknFohQQMBRohQQMBRvdlvi+vdlvi+7/wIm87/wIm8hEgIQhEgIQsLpq1sLpq1fKGHCxfKGHCx4//vU4//vUxBuALkxBuALkntERWcgntERWcgAYlxGjAYlxGj/M6AAj/M6AAjLAz5QLAz5Qcw9Hwcw9HwvQiQwlvQiQwlA9ZFaA9ZFaMohhcMiDUMohhcMiDU1U7a1U7aQ56qQ56qbfNfEbfNfEARKGHByhARKGHByhL1cML1cMdeBJCMudeBJCMuUwtwGUwtwG0Q6Q0Q6QZLGHuZLGHuAvxx0WAvxx0WlyAYOQQqAFK0lyAYOQQqAFK05VL2pMFUFhtl5VL2pMFUFhtlmm7u5mm7u5L37zdL37zdNr8OJNr8OJfyOCX/fyOCX/ib/O+W3ib/O+W3WHCgCsWHCgCsLQXNuLQXNuShn0TUShn0TUwWEaQwWEaQgMLso1gMLso10jNSEF0jNSEFtnPW0rtnPW0rYSCw8YSCw8mOlyrmOlyrUwBMZUwBMZORxErGORxErGgBcEGAgBcEGAICC6hQICC6hQWoKytTZWoKytTZUTloSE6UTloSE62Rw42Rw40A0w0A0w1pqTLR1pqTLRskLdGUskLdGUQHLqJBQHLqJB2SeCBA2SeCBAgAYOaigAYOaiwBRDrAYwBRDrAY6CngAo6CngAoLkoSzgLkoSzgPM02DDPM02DDJlUDMJlUDMIM8XTFIIM8XTFIbqkg9bqkg9DLXthllDLXthllSGAGYGjSGAGYGjC6RZC6RZUZCEUZCElFEjMQlFEjMQAAJlshAAJlshCgOQQCgOQQFlxRowXFlxRowXGUFKhIceGUFKhIce4dMTA4dMTAteQPZFLteQPZFLwcIiswwcIisw0tQk0tQkOzuONNOzuONNDAxGWaDAxGWaI6AdAUI6AdAUmGpYmGpYVjOhBVjOhBjD1sjD1sO67CMO67CMjLIYhjLIYhHKo8oHKo8oKgJcKKgJcKcIUPBYcIUPBYNBUGAgALENBUGAgALErcYF4rcYF4RMaUBjRMaUBjYiVglYiVglGfEgGfEgSodKpSodKpHCDTTHHCDTTHJC4Y8JC4Y8+bb5WC+bb5WCgDQqgDQqQXYmZ0mkMWALAQXYmZ0mkMWALA1UBYmCB1UBYmCBxjhRhAAxjhRhAAVBA5QtVBA5QtRCFgLQBRCFgLQB4AIAQ4AIAQBClCgxBClCgxYuAs6NYuAs6N+URG8B+URG8BQMunQrQMunQrZXEY8ZXEY8K1RMAK1RMAyiRv6yiRv6aLu41aLu41xcAgAKaxcAgAKaI6M8I6M8QGmQIQGmQIhDgyYhDgyYk5yowk5yowg0ypkg0ypk0QBMOic0QBMOicZtYu7ZtYu78uQHA8uQHA4eDn4eDn5gyK+5gyK+oy+asboy+asbAlHWKyxAlHWKyx/5fL/5fLbErwh+bErwh+HoAa5HoAa5K4JcNk6R4GDo/1fdRnrP2ww4oKlZLcrGVyTYYQ9DkRYOyyMV7zd2/YA5CAdNA0I0cIGK4JcNk6R4GDo/1fdRnrP2ww4oKlZLcrGVyTYYQ9DkRYOyyMV7zd2/YA5CAdNA0I0cIGeEGLDGeEGLDGicGiDGcaicGiDGcaG4ITdG4ITdJG6eJG6eVWXLgeVWXLge/GIxY9/GIxY9AYgnLbAYgnLbq/QeDAq/QeDAiARt0iARt0ezHgy85gQL5pumzlmtNlrC3w0kMO1ezHgy85gQL5pumzlmtNlrC3w0kMO1N0yNaN0yNaHMSCGRaHMSCGRaRyq2Ryq2t95at95a5jjT25jjT29flhv89flhv8Mf/////////Mf/////////4ovN74ovN70UF8o0UF8oVl1FVl1FqwU47qwU4791GAQ91GAQ7PxSH37PxSH3f//////////Awf//////////AwgGAzHgGAzHjzQCjjzQCjFDAxoJCjFDAxoJCjHHjMAjHHjMAjCDDEDzQCDDEDzQlxJqYlxJqY8COAgE8COAgEjLQFjLQFQHZVEAAQHZVEAAAsGPfDAsGPfDjA4ojA4oNbgdJNbgdJ3hwJi3hwJiOAjBUQOAjBUQGEWmSGVlLOgGEWmSGVlLOgAZkCoMAZkCoM46c//46c//vUxBMAvUxBMA7OnrPx7OnrPx2MgAX2MgAXwPWURnwPWURnGugqAVGugqAVYq7YSYq7YS/ypmIr/ypmIrCv7JCv7Jl3JDIrIPFyl3JDIrIPFykhWWvsXkhWWvsX+LNK++LNK+ZigFTFaZigFTFa80lG80lG0s6X0s6XZXTJpZXTJp6AUvga6AUvgaIYphnoIYphnoGiga6xGiga6xrtGu4artGu4a7AORX7AORXgWSAQQgWSAQQCGLXJCGLXJjLuhcjLuhcBS6YpnBS6Ypn1d1+W1d1+WYpg5uYpg5uq11wcq11wcKGTVasabKGTVasabk16NTk16NT1/eMpf1/eMpfZ3o1Z3o1bhmUubhmUuTDsZ1TDsZ1SQ0+zWSQ0+zWmHNek7mHNek7ooJgEMooJgEMWaLtJhWaLtJhJjMSuJjMSuTapn3YTapn3YaxFsUDUaxFsUDUixlAlMSixlAlMS6pd1AC6pd1ACzVHoEzVHoEgGOcZgGOcZ5xdlm5xdlmsoL5KsoL5KBJDLDQBJDLDQtfT+ICtfT+ICnSQ6onSQ6oDVKQoDVKQoKFBDXaKFBDXaM6c4M6c4JzcJT5JzcJT5bZrKZzGlYbZrKZzGlYmsGCcWmsGCcWefQFEtefQFEtHVSMRMLHVSMRMLNHA6byNHA6byZjDmZjDmEKXxdxEKXxdxOZp0OZp0NPQnMYNPQnMYJwOSVMJwOSVM50aV50aVtMY0utMY0uMAQgEcMAQgEcYoCSReJYoCSReJTIvEWiTIvEWiXmrSponXmrSponUsEZ6BUsEZ6BZpKpZpKpVZPCblVZPCblSw0WhqSw0Whq215r215rVIxdrNLVIxdrNLBKmIIBBKmIIBAAIEHLLAAIEHLLJrMuhJrMuh6W4w6W4w9D0kos9D0kosQXYmAAQXYmAAOqN2OqN2IgjSBSIgjSBS9NBkH9NBkHcGq2cGq2ACjTBXACjTBX61xL61xLsLAssLAsSg+8Sg+88LVF48LVF4twfyCaZtwfyCaZ3Xchm3XchmcdCIpix5cdCIpix55lnwwg5lnwwgCbBBTMXCbBBTMX5hL15hL1KHKUr2KHKUr2R8TURCRR8TURCRqTqVqTqVXg5rzXg5rzdkHxZdkHxZ1ASLGJ1ASLGJ2GCAi2GCAiEhLNaEhLNaMGinpa8MGinpa8V9i0V9i0EE6MynEE6MynKcrUpQKcrUpQgCUpWgCUpWk2ebCk2ebCpWHunAppWHunApYAzZfYAzZf8ib5d8ib5drttOburttObu19p019p0NKVLld1NKVLld16YxAs6YxAsWp2XWp2XUbyxVUbyxVApfsbTWApfsbTWUXVRRpUXVRRpL9P+L9P+shHloqlshHloqlzSFY0zSFY0+EHlI+EHlIumVJhiumVJhiC2y3C2y31iPAgy1iPAgyoLCFFFloLCFFFlKiVhBKiVhBh0TAFh0TAFYu+HCReYu+HCReNUxdAObKz0sNUxdAObKz0s0DU3Mi0DU3MiTZNI1ACTZNI1ACVVnHS0VVnHS0C6oJC6oJIl2ZZGIl2ZZG2I4R2I4RbA8ebA8eW3DQW3DQFAIIW5FAIIW5CIYZVAZCIYZVAZkmGPTXkmGPTXoDzuCoDzuCphCw0phCw0FdQdAFdQdAStEiy7StEiy7gw6Bkgw6BkC/okkoC/okkoVAiE1VAiE1HQaNCQtHQaNCQtQFASFBQFASFBAMDvuDAKaAMDvuDAKaJjTwMJjTwMEmOQgEmOQgEoEFgEoEFgYPeUdYPeUdHAUGYoqHAUGYoqNPwsDLTNPwsDLTAAKAkyBoAAKAkyBoqMRyUqMRyUPLaonJPLaonJ7BxJ7BxJNNNVX4NNNVX4kLcdbrkLcdbrqLLEAJqLLEAJxFClplslxFClplslgVNZxgVNZx9Gdw/Y9Gdw/YVEIU1AQVEIU1AQAAAAAqsDAAAAAqsDkjCKl8kjCKl802zkF02zkFVCYiqEVCYiqE8INKCw8INKCwS0iXS0iXLFdQGuLFdQGuFukHuOFukHuOthW2MothW2MoC//vUC//vUxBaA7xBaA7G3rJG3rJ81jIAWyvGPSt81jIAWyvGPStZAAlV5ZAAlV5YymtdexYymtdexrrYm4rrYm4MOaZAKMOaZAK5Fjoi5FjoiJ9rSZJ9rSZ06ywC06ywCtSZKLpdtSZKLpdVQAWCVQAWCao3zSao3zSlaAwcsnlaAwcsnE0eoJE0eoJFBZgtyFBZgtyj4mOj4mOv1pCv1pCdcHIJndcHIJnZh55YZh55YboU/mBRboU/mBRBD9HyAYBD9HyAYfU5afU5aUzMYEKUzMYEKAlhXFtAlhXFtNKlbKIjNKlbKIjBONmmpBONmmp56y/c56y/cxcb59pxcb59p9prTF+w9prTF+wKyaMMxKyaMMxVnii2Vnii2Y0+rqrY0+rqr4X3H4X3HIdkSZEBIdkSZEBg4Jt5cjovuPg4Jt5cjovuPq5V+IzJagq5V+IzJagge5y0ge5y0vGRlpmdvGRlpmdKBKXJKBKXJkO2+kO2+UrVsLnIUrVsLnI/t2Uve/t2UvepPdBppPdBpHFQYRBHFQYRBKbhdRKbhdR9HJAx9HJAxKfIOSQLKfIOSQLRoIixkRoIixkNFcWVMNFcWVMlYzg0lYzg053YFi53YFiUKBDOcUKBDOcWZpCWZpCmYKh1mYKh1BwgoqBwgoq2ZD52ZD5144m144m0l6o0l6oIHFLGUXIHFLGUXCDW6rCDW6rCs+TAaeCs+TAaeKEoUlklKEoUlkl7oOq7oOqGqBvGqBv2IUm/2IUm/MEZFMyiMEZFMyiVMlIMtbVMlIMtbIsM6zIsM6z5sgUx5sgUxZkvlaIZkvlaIUBTtflUBTtflhiZDjuhiZDju1SptOn1SptOnGENldUzGENldUz/T1WyDI/T1WyDI0gADHS0gADHSj7rTHG0ixYuj7rTHG0ixYuIQoWCAIQoWCAIWViCAEDQYMCL/KoJraezuIWViCAEDQYMCL/KoJraezuMihijavtSDUkgMihijavtSDUkgp1Ujp1UjO0xkO0xk1WVtc1WVtcYkXxbYkXxbGyqOPGyqOP2ia8b2ia8bRUwnTSuRUwnTSuBAxfkUGBAxfkUGVKlWmVKlWmE2EKksE2EKksTZzKDETZzKDEHcBfHcBfQgCDkhQgCDkh0IvK0IvKvmo/EBlvmo/EBlRUaZFgmRUaZFgm1LRl01LRl0FBFF3cFBFF3cVnay09Vnay09HigQFHigQFyxkyWIMyxkyWIMMf8vMf8vcl/H7bcl/H7bNWKOU8NWKOU8ShrT2ShrT2VuFFY1VuFFY1BLswI5BLswI561Wcs61Wcs4XyzV4XyzVckWZ2ckWZ2zNeLULzNeLULyLNVHyLNVHVCQmKVCQmKvRw4vRw4FXMtVPhFXMtVPhK5cDuK5cDuOAgas5OAgas5TJbbpTJbbpEISKQkaEISKQkaYQiz2YQiz2vAFcRBvAFcRBsQV2sQV2s9NBKs9NBKsvsh4Rsvsh4RFAJVAGlFAJVAGlUag6QUag6QoAPdEoAPdEISMEEDMISMEEDMCEtYUsCEtYUsytlp6ytlp6X0HhX0HhB4MCAB4MCApCKpVpCKpVcQ4mmcQ4mmYX3NPYX3NP4xCDHs4xCDHsBoBknJBoBknJ4iFdC4iFdCQj0oQj0oQYwaKMQYwaKMPLwS7PLwS7GRm3LGRm3LxGKAYxGKAYLDLwh4LDLwh4twspP0twspP0iIUrCBiIUrCBVbi2AkVbi2AkICAZYjen8ICAZYjen8XNSpSEQXNSpSEQ7KYqlaa7KYqlaa45eKo45eKo8sXY88sXY8guv1Nguv1NxEZ3kekxEZ3kekioMd+iSioMd+iSsiqwUvesiqwUve2kIOd2kIOdjtTIAAOjtTIAAOtai2wOtai2wO2UeR2UeRg1RzMg1RzMqAzVUqAzVUgdCQ4gdCQ4yM1QyM1QwMtGTjowMtGTjoAFRZjAFRZjXGDDwwXGDDww8OFi08OFi0H2MF2H2MF23BWSs3BWSsIYgSTKRIiHIYgSTKRIiHUKsL7UKsL7ZYWhLlpZYWhLlpGreat catch. Playing the sound *before* the visual transition eliminates the perceived latency, and adding haptic feedback creates a multi-sensory confirmation that feels truly native.
 
-const PLAY_ICON = `<svg viewBox="0 0 24 24" fill="none"><path opacity="0.1" d="M4 5.49683V18.5032C4 20.05 5.68077 21.0113 7.01404 20.227L18.0694 13.7239C19.384 12.9506 19.384 11.0494 18.0694 10.2761L7.01404 3.77296C5.68077 2.98869 4 3.95 4 5.49683Z" fill="currentColor"/><path d="M4 5.49683V18.5032C4 20.05 5.68077 21.0113 7.01404 20.227L18.0694 13.7239C19.384 12.9506 19.384 11.0494 18.0694 10.2761L7.01404 3.77296C5.68077 2.98869 4 3.95 4 5.49683Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const PAUSE_ICON = `<svg viewBox="0 0 24 24" fill="none"><path opacity="0.1" d="M14 19L14 5C14 3.89543 14.8954 3 16 3L17 3C18.1046 3 19 3.89543 19 5L19 19C19 20.1046 18.1046 21 17 21L16 21C14.8954 21 14 20.1046 14 19Z" fill="currentColor"/><path opacity="0.1" d="M10 19L10 5C10 3.89543 9.10457 3 8 3L7 3C5.89543 3 5 3.89543 5 5L5 19C5 20.1046 5.89543 21 7 21L8 21C9.10457 21 10 20.1046 10 19Z" fill="currentColor"/><path d="M14 19L14 5C14 3.89543 14.8954 3 16 3L17 3C18.1046 3 19 3.89543 19 5L19 19C19 20.1046 18.1046 21 17 21L16 21C14.8954 21 14 20.1046 14 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19L10 5C10 3.89543 9.10457 3 8 3L7 3C5.89543 3 5 3.89543 5 5L5 19C5 20.1046 5.89543 21 7 21L8 21C9.10457 21 10 20.1046 10 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+### 🔧 Change Explanation: Pre-Trigger Sound + Haptic Feedback
 
-let playerBar, playerSongName, playerTimes, progressFill, progressContainer, playPauseBtn;
-let actionOverlay, actionSheetTitle, actionRename, actionDelete, actionCancel;
-let renameOverlay, renameInput, renameSave, renameCancel;
+Two changes in `app.js`:
 
-async function initDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-      }
-    };
-    request.onsuccess = (event) => { db = event.target.result; resolve(db); };
-    request.onerror = (event) => reject(event.target.error);
-  });
-}
+1.  **Sound plays immediately on touchstart** – Moved from inside the `setTimeout` callback to the very beginning of the touch handler, so audio starts ~0ms after finger contact instead of waiting 650ms
+2.  **Vibration synced with menu appearance** – `navigator.vibrate(15)` fires inside the timeout alongside the action sheet display, providing tactile confirmation at the exact moment the menu becomes visible
 
-async function saveSongBlob(file) {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    const songData = { name: file.name, blob: file, duration: null, addedAt: Date.now() };
-    const addRequest = store.add(songData);
-    addRequest.onsuccess = () => resolve(addRequest.result);
-    addRequest.onerror = () => reject(addRequest.error);
-  });
-}
+#### Key JS Changes
+```javascript
+// OLD: Sound played inside setTimeout (delayed)
+li.addEventListener('touchstart', () => {
+  li.classList.add('pressing');
+  longPressTimer = setTimeout(() => {
+    ACTION_SOUND.currentTime = 0;
+    ACTION_SOUND.play().catch(() => {});
+    showActionSheet(song.id, song.name);
+  }, 650);
+});
 
-async function updateSongName(songId, newName) {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    const getRequest = store.get(songId);
-    getRequest.onsuccess = () => {
-      const song = getRequest.result;
-      if (song) {
-        song.name = newName;
-        const putRequest = store.put(song);
-        putRequest.onsuccess = () => resolve();
-        putRequest.onerror = () => reject(putRequest.error);
-      }
-    };
-    getRequest.onerror = () => reject(getRequest.error);
-  });
-}
-
-async function deleteSong(songId) {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.delete(songId);
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error);
-  });
-}
-
-async function extractAndUpdateDuration(songId, file) {
-  try {
-    const tempAudio = new Audio();
-    tempAudio.src = URL.createObjectURL(file);
-    const duration = await new Promise((resolve, reject) => {
-      tempAudio.onloadedmetadata = () => { URL.revokeObjectURL(tempAudio.src); resolve(tempAudio.duration); };
-      tempAudio.onerror = () => { URL.revokeObjectURL(tempAudio.src); reject(new Error('Metadata load failed')); };
-    });
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    const getRequest = store.get(songId);
-    getRequest.onsuccess = () => {
-      const song = getRequest.result;
-      if (song) { song.duration = duration; store.put(song); }
-    };
-    const songs = await loadSongs();
-    renderLibrary(songs);
-  } catch (e) { console.warn(`Could not extract duration for ${file.name}:`, e); }
-}
-
-async function loadSongs() {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction([STORE_NAME], 'readonly');
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.getAll();
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-}
-
-function updatePlayerUI(elapsed, remaining, progress) {
-  playerTimes.textContent = `${secondsToDecimalMMSS(elapsed)} / ${secondsToDecimalMMSS(elapsed + remaining)}`;
-  progressFill.style.width = `${(progress * 100).toFixed(2)}%`;
-}
-
-function updatePlayPauseIcon(isPlaying) {
-  playPauseBtn.innerHTML = isPlaying ? PAUSE_ICON : PLAY_ICON;
-  playPauseBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
-}
-
-async function playSong(songId) {
-  const transaction = db.transaction([STORE_NAME], 'readonly');
-  const store = transaction.objectStore(STORE_NAME);
-  const request = store.get(songId);
-  request.onsuccess = () => {
-    const song = request.result;
-    if (song && song.blob) {
-      if (audioPlayer.src) URL.revokeObjectURL(audioPlayer.src);
-      audioPlayer.src = URL.createObjectURL(song.blob);
-      audioPlayer.play().catch(e => console.error('Playback failed:', e));
-      currentSongId = songId;
-      playerSongName.textContent = song.name;
-      playerBar.classList.add('active');
-      updatePlayPauseIcon(true);
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({ title: song.name, artist: 'Taktwerk', album: 'Local Library' });
-        navigator.mediaSession.setActionHandler('play', () => audioPlayer.play());
-        navigator.mediaSession.setActionHandler('pause', () => audioPlayer.pause());
-        navigator.mediaSession.setActionHandler('stop', () => {
-          audioPlayer.pause(); audioPlayer.currentTime = 0;
-          playerBar.classList.remove('active'); currentSongId = null;
-          updatePlayPauseIcon(false);
-          loadSongs().then(songs => renderLibrary(songs));
-        });
-      }
-    }
-  };
-}
-
-function togglePlayback(songId) {
-  if (currentSongId == songId && !audioPlayer.paused) {
-    audioPlayer.pause();
-  } else {
-    playSong(songId);
-  }
-}
-
-function showActionSheet(songId, songName) {
-  // Play sound effect
+// NEW: Sound immediate on touch, vibrate on trigger
+li.addEventListener('touchstart', () => {
   ACTION_SOUND.currentTime = 0;
   ACTION_SOUND.play().catch(() => {});
-  
-  activeSongId = songId;
-  actionSheetTitle.textContent = songName;
-  actionOverlay.classList.add('active');
-}
-
-function hideActionSheet() {
-  actionOverlay.classList.remove('active');
-  activeSongId = null;
-}
-
-function showRenameModal(currentName) {
-  renameInput.value = currentName;
-  renameOverlay.classList.add('active');
-  setTimeout(() => { renameInput.focus(); renameInput.select(); }, 100);
-}
-
-function hideRenameModal() {
-  renameOverlay.classList.remove('active');
-}
-
-function renderLibrary(songs) {
-  const libraryEl = document.getElementById('library');
-  libraryEl.innerHTML = '';
-  if (songs.length === 0) {
-    libraryEl.innerHTML = '<li style="text-align:center; padding:20px; color:#6e6e73;">No songs imported yet.</li>';
-    return;
-  }
-  songs.forEach(song => {
-    const li = document.createElement('li');
-    li.className = 'song-item';
-    const durationDisplay = song.duration !== null ? secondsToDecimalMMSS(song.duration) : 'Loading...';
-    li.innerHTML = `
-      <div class="song-info">
-        <span class="song-name">${song.name}</span>
-        <span class="song-duration">${durationDisplay}</span>
-      </div>
-    `;
-
-    li.addEventListener('touchstart', () => {
-      li.classList.add('pressing');
-      longPressTimer = setTimeout(() => {
-        li.classList.remove('pressing');
-        showActionSheet(song.id, song.name);
-      }, 650);
-    });
-
-    li.addEventListener('touchend', () => {
-      clearTimeout(longPressTimer);
-      li.classList.remove('pressing');
-    });
-    li.addEventListener('touchcancel', () => {
-      clearTimeout(longPressTimer);
-      li.classList.remove('pressing');
-    });
-    li.addEventListener('touchmove', () => {
-      clearTimeout(longPressTimer);
-      li.classList.remove('pressing');
-    });
-
-    li.addEventListener('click', () => togglePlayback(song.id));
-    libraryEl.appendChild(li);
-  });
-}
-
-async function handleImport(files) {
-  const statusEl = document.getElementById('status');
-  statusEl.textContent = `Importing ${files.length} songs...`;
-  try {
-    const songIds = [];
-    for (let i = 0; i < files.length; i++) {
-      const id = await saveSongBlob(files[i]);
-      songIds.push({ id, file: files[i] });
-      statusEl.textContent = `Saved ${i + 1}/${files.length}`;
-    }
-    const songs = await loadSongs();
-    renderLibrary(songs);
-    statusEl.textContent = 'Extracting metadata...';
-    for (const { id, file } of songIds) {
-      await extractAndUpdateDuration(id, file);
-    }
-    statusEl.textContent = 'Import complete!';
-  } catch (error) {
-    console.error(error);
-    statusEl.textContent = 'Error importing songs.';
-  }
-}
-
-async function initApp() {
-  await initDB();
-
-  playerBar = document.getElementById('player-bar');
-  playerSongName = document.getElementById('player-song-name');
-  playerTimes = document.getElementById('player-times');
-  progressFill = document.getElementById('progress-fill');
-  progressContainer = document.getElementById('progress-container');
-  playPauseBtn = document.getElementById('play-pause-btn');
-  actionOverlay = document.getElementById('action-overlay');
-  actionSheetTitle = document.getElementById('action-sheet-title');
-  actionRename = document.getElementById('action-rename');
-  actionDelete = document.getElementById('action-delete');
-  actionCancel = document.getElementById('action-cancel');
-  renameOverlay = document.getElementById('rename-overlay');
-  renameInput = document.getElementById('rename-input');
-  renameSave = document.getElementById('rename-save');
-  renameCancel = document.getElementById('rename-cancel');
-
-  if (!actionOverlay || !actionRename || !actionDelete) {
-    console.error('[Taktwerk] CRITICAL: Overlay elements not found in DOM!');
-    return;
-  }
-
-  // Preload sound effect
-  ACTION_SOUND.load();
-
-  actionCancel.addEventListener('click', hideActionSheet);
-  actionOverlay.addEventListener('click', (e) => { if (e.target === actionOverlay) hideActionSheet(); });
-
-  actionRename.addEventListener('click', async () => {
-    const songId = activeSongId;
-    hideActionSheet();
-    const songs = await loadSongs();
-    const song = songs.find(s => s.id === songId);
-    if (song) showRenameModal(song.name);
-  });
-
-  actionDelete.addEventListener('click', async () => {
-    const songId = activeSongId;
-    hideActionSheet();
-    if (currentSongId == songId) {
-      audioPlayer.pause();
-      playerBar.classList.remove('active');
-      currentSongId = null;
-      updatePlayPauseIcon(false);
-    }
-    await deleteSong(songId);
-    const songs = await loadSongs();
-    renderLibrary(songs);
-  });
-
-  renameCancel.addEventListener('click', hideRenameModal);
-  renameOverlay.addEventListener('click', (e) => { if (e.target === renameOverlay) hideRenameModal(); });
-
-  renameSave.addEventListener('click', async () => {
-    const newName = renameInput.value.trim();
-    if (newName && activeSongId !== null) {
-      await updateSongName(activeSongId, newName);
-      if (currentSongId == activeSongId) {
-        playerSongName.textContent = newName;
-        if ('mediaSession' in navigator) {
-          navigator.mediaSession.metadata = new MediaMetadata({ title: newName, artist: 'Taktwerk', album: 'Local Library' });
-        }
-      }
-      const songs = await loadSongs();
-      renderLibrary(songs);
-    }
-    hideRenameModal();
-  });
-
-  renameInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); renameSave.click(); }
-    if (e.key === 'Escape') hideRenameModal();
-  });
-
-  progressContainer.addEventListener('click', (e) => {
-    if (!audioPlayer.duration) return;
-    const rect = progressContainer.getBoundingClientRect();
-    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    audioPlayer.currentTime = ratio * audioPlayer.duration;
-  });
-
-  playPauseBtn.addEventListener('click', () => {
-    if (currentSongId === null) return;
-    if (audioPlayer.paused) {
-      audioPlayer.play().catch(e => console.error('Playback failed:', e));
-    } else {
-      audioPlayer.pause();
-    }
-  });
-
-  audioPlayer.addEventListener('timeupdate', () => {
-    if (!audioPlayer.duration) return;
-    const elapsed = audioPlayer.currentTime;
-    const remaining = audioPlayer.duration - elapsed;
-    const progress = elapsed / audioPlayer.duration;
-    updatePlayerUI(elapsed, remaining, progress);
-  });
-
-  audioPlayer.addEventListener('play', () => { playerBar.classList.add('active'); updatePlayPauseIcon(true); });
-  audioPlayer.addEventListener('pause', () => { updatePlayPauseIcon(false); });
-  audioPlayer.addEventListener('ended', () => {
-    playerBar.classList.remove('active');
-    currentSongId = null;
-    updatePlayPauseIcon(false);
-    loadSongs().then(songs => renderLibrary(songs));
-  });
-
-  const importBtn = document.getElementById('importBtn');
-  const audioPicker = document.getElementById('audioPicker');
-  importBtn.addEventListener('click', () => audioPicker.click());
-  audioPicker.addEventListener('change', async (e) => {
-    if (e.target.files.length > 0) {
-      await handleImport(Array.from(e.target.files));
-      e.target.value = '';
-    }
-  });
-
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && !audioPlayer.paused && currentSongId) {
-      audioPlayer.play().catch(() => {});
-    }
-  });
-
-  updatePlayPauseIcon(false);
-  const songs = await loadSongs();
-  renderLibrary(songs);
-}
-
-initApp();
+  li.classList.add('pressing');
+  longPressTimer = setTimeout(() => {
+    if (navigator.vibrate) navigator.vibrate(15);
+    li.classList.remove('pressing');
+    showActionSheet(song.id, song.name);
+  }, 650);
+});
