@@ -1,4 +1,4 @@
-// app.js - Main application logic with playback + decimal progress
+// app.js - Main application logic with playback + decimal progress + iOS polish
 import { secondsToDecimalMMSS } from '/taktwerk/takt.js';
 
 const DB_NAME = 'TaktwerkDB';
@@ -97,7 +97,7 @@ audioPlayer.addEventListener('timeupdate', () => {
   updatePlayerUI(elapsed, remaining, progress);
 });
 
-// Show/hide player bar on play/end (FIXED: no async)
+// Show/hide player bar on play/end
 audioPlayer.addEventListener('play', () => playerBar.classList.add('active'));
 audioPlayer.addEventListener('ended', () => {
   playerBar.classList.remove('active');
@@ -121,6 +121,24 @@ async function playSong(songId) {
       document.querySelectorAll('.play-btn').forEach(btn => {
         btn.textContent = btn.dataset.id == songId ? '⏸' : '▶';
       });
+
+      // Media Session API for lock screen controls
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: song.name,
+          artist: 'Taktwerk',
+          album: 'Local Library'
+        });
+        navigator.mediaSession.setActionHandler('play', () => audioPlayer.play());
+        navigator.mediaSession.setActionHandler('pause', () => audioPlayer.pause());
+        navigator.mediaSession.setActionHandler('stop', () => {
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
+          playerBar.classList.remove('active');
+          currentSongId = null;
+          loadSongs().then(songs => renderLibrary(songs));
+        });
+      }
     }
   };
 }
@@ -195,8 +213,17 @@ async function initApp() {
       e.target.value = '';
     }
   });
+
+  // Resume audio when returning from background
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && !audioPlayer.paused && currentSongId) {
+      audioPlayer.play().catch(() => {});
+    }
+  });
+
   const songs = await loadSongs();
   renderLibrary(songs);
 }
 
 initApp();
+
