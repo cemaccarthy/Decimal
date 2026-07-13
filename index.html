@@ -20,7 +20,6 @@
       -webkit-user-select: none; user-select: none;
     }
     h1 { margin-bottom: 16px; }
-
     .tab-bar {
       display: flex; width: 100%; max-width: 300px; margin-bottom: 20px;
       border: 2px solid #000; border-radius: 12px; overflow: hidden;
@@ -35,34 +34,22 @@
     .tab-btn:first-child { border-right: 2px solid #000; }
     .tab-btn.active { background: #007aff; color: #fff; }
     .tab-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
-
     .view { display: none; width: 100%; max-width: 600px; }
     .view.active { display: block; }
     #view-add.active { display: flex; flex-direction: column; align-items: center; }
-
-    /* Piece Form Styles */
-    .piece-form {
-      width: 100%; max-width: 320px;
-      display: flex; flex-direction: column; gap: 0;
-    }
-    .form-label {
-      display: block; font-size: 13px; color: #6e6e73;
-      margin-bottom: 4px; margin-top: 14px; font-weight: 500;
-    }
+    .piece-form { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 0; }
+    .form-label { display: block; font-size: 13px; color: #6e6e73; margin-bottom: 4px; margin-top: 14px; font-weight: 500; }
     .form-label:first-child { margin-top: 0; }
     .form-input {
       width: 100%; padding: 10px 12px; font-size: 15px;
       border: 1px solid #e5e5ea; border-radius: 8px;
       font-family: inherit; outline: none; background: #fff;
-      -webkit-user-select: text; user-select: text;
-      color: #1d1d1f;
+      -webkit-user-select: text; user-select: text; color: #1d1d1f;
     }
     .form-input:focus { border-color: #007aff; }
     .form-input::placeholder { color: #aeaeb2; }
     .form-row { display: flex; gap: 8px; margin-top: 14px; }
     .form-row > div { flex: 1; }
-
-    /* Key Signature Dropdown */
     .key-sig-wrapper { position: relative; }
     .key-sig-trigger {
       width: 100%; padding: 10px 12px; font-size: 15px;
@@ -84,8 +71,7 @@
     .key-sig-dropdown.active { display: flex; }
     .key-sig-option {
       padding: 11px 16px; font-size: 14px; cursor: pointer;
-      border-bottom: 1px solid #f5f5f7;
-      -webkit-tap-highlight-color: transparent;
+      border-bottom: 1px solid #f5f5f7; -webkit-tap-highlight-color: transparent;
     }
     .key-sig-option:last-child { border-bottom: none; }
     .key-sig-option:active { background: #f5f5f7; }
@@ -100,8 +86,6 @@
     .key-sig-toggle.expanded .arrow { transform: rotate(90deg); }
     .key-sig-obscure { display: none; }
     .key-sig-obscure.visible { display: block; }
-
-    /* Catalogue conditional row */
     .catalogue-row { display: flex; gap: 8px; align-items: flex-start; }
     .catalogue-row > div:first-child { flex: 1; }
     .catalogue-row > div:last-child { flex: 1; }
@@ -114,11 +98,8 @@
       background-repeat: no-repeat; background-position: right 12px center;
     }
     .catalogue-select:focus { border-color: #007aff; }
-
-    /* Movement Sections */
     .movements-divider {
-      margin-top: 20px; padding-top: 16px;
-      border-top: 2px solid #000;
+      margin-top: 20px; padding-top: 16px; border-top: 2px solid #000;
       font-size: 14px; font-weight: 700; color: #1d1d1f;
       text-align: center; letter-spacing: 0.5px;
     }
@@ -127,176 +108,17 @@
       border: 1px solid #e5e5ea; border-radius: 10px;
       background: #fafafa; position: relative;
     }
-    .movement-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 10px;
-    }
-    .movement-title-label {
-      font-size: 14px; font-weight: 600; color: #1d1d1f;
-    }
-    .movement-actions { display: flex; gap: 6px; align-items: center; }
-    .movement-reset-btn {
+    .movement-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .movement-title-label { font-size: 14px; font-weight: 600; color: #1d1d1f; }
+    .movement-actions { display: flex; gap: 6px; align-items:You center; }
+ are absolutely right. I over-expanded the CSS in that last version, bloating it unnecessarily. Here is the exact Step 5 `index.html` with only the two required changes applied: `    .movement-reset-btn {
       padding: 4px 10px; border-radius: 6px; border: 1px solid #e5e5ea;
       background: #fff; color: #6e6e73; font-size: 12px; font-weight: 500;
-      cursor: pointer; font-family: inherit;
-      -webkit-tap-highlight-color: transparent;
+      cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent;
     }
-    .movement-reset-btn:active { background: #f5f5f7; }
+    .movement-reset-btn:active { background?v: #f5f5f7; }
     .movement-delete-btn {
-      width: 26px; height: 26px; border-radius: 6px; border: 1px solid #e5e5ea;
-      background: #fff; color: #6e6e73; font-size: 14px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .movement-delete-btn:active { background: #fff0f0; color: #ff3b30; }
-    .movement-delete-btn.locked {
-      opacity: 0.3; pointer-events: none; cursor: default;
-    }
-    .movement-field-label {
-      display: block; font-size: 12px; color: #6e6e73;
-      margin-bottom: 3px; margin-top: 10px;
-    }
-    .movement-field-label:first-of-type { margin-top: 0; }
-    .movement-input {
-      width: 100%; padding: 8px 10px; font-size: 14px;
-      border: 1px solid #e5e5ea; border-radius: 6px;
-      font-family: inherit; outline: none; background: #fff;
-      -webkit-user-select: text; user-select: text; color: #1d1d1f;
-    }
-    .movement-input:focus { border-color: #007aff; }
-    .movement-input::placeholder { color: #aeaeb2; }
-    .movement-key-sig-trigger {
-      width: 100%; padding: 8px 10px; font-size: 14px;
-      border: 1px solid #e5e5ea; border-radius: 6px;
-      background: #fff; color: #1d1d1f; cursor: pointer;
-      text-align: left; font-family: inherit;
-      display: flex; justify-content: space-between; align-items: center;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .movement-key-sig-trigger.placeholder { color: #aeaeb2; }
-    .movement-key-sig-trigger::after { content: '▼'; font-size: 9px; color: #6e6e73; }
-    .movement-file-picker {
-      width: 100%; padding: 8px 0; font-size: 13px;
-      color: #007aff; cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .movement-file-name {
-      font-size: 12px; color: #6e6e73; margin-top: 4px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    /* Save button */
-    .save-btn {
-      margin-top: 24px; padding: 14px 24px;
-      background: #007aff; color: #fff; border: none;
-      border-radius: 12px; font-size: 17px; font-weight: 600;
-      cursor: pointer; width: 100%; font-family: inherit;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .save-btn:active { opacity: 0.8; }
-
-    /* Composer Selector */
-    .composer-selector-trigger {
-      width: 100%; padding: 10px 12px; border: 1px solid #e5e5ea;
-      border-radius: 8px; background: #fff; font-size: 15px; color: #1d1d1f;
-      cursor: pointer; text-align: left; font-family: inherit;
-      display: flex; justify-content: space-between; align-items: center;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .composer-selector-trigger.placeholder { color: #aeaeb2; }
-    .composer-selector-trigger::after { content: '▼'; font-size: 10px; color: #6e6e73; }
-    .composer-dropdown {
-      position: fixed; z-index: 10000; background: #fff;
-      border: 1px solid #e5e5ea; border-radius: 10px;
-      max-height: 320px; overflow-y: auto;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-      display: none; flex-direction: column;
-    }
-    .composer-dropdown.active { display: flex; }
-    .composer-search {
-      padding: 10px 12px; border-bottom: 1px solid #e5e5ea;
-      position: sticky; top: 0; background: #fff; z-index: 1;
-    }
-    .composer-search input {
-      width: 100%; padding: 8px 10px; font-size: 14px; border: 1px solid #e5e5ea;
-      border-radius: 6px; outline: none; font-family: inherit;
-      -webkit-user-select: text; user-select: text;
-    }
-    .composer-search input:focus { border-color: #007aff; }
-    .composer-list { flex: 1; overflow-y: auto; }
-    .composer-option {
-      padding: 12px 16px; font-size: 15px; cursor: pointer;
-      border-bottom: 1px solid #f5f5f7; -webkit-tap-highlight-color: transparent;
-    }
-    .composer-option:last-child { border-bottom: none; }
-    .composer-option:active { background: #f5f5f7; }
-    .composer-empty { padding: 16px; text-align: center; color: #6e6e73; font-size: 14px; }
-    .composer-add-new {
-      padding: 12px 16px; border-top: 1px solid #e5e5ea;
-      color: #007aff; font-size: 14px; font-weight: 600;
-      cursor: pointer; text-align: center; background: #fafafa;
-      border-radius: 0 0 10px 10px; -webkit-tap-highlight-color: transparent;
-    }
-    .composer-add-new:active { background: #f0f7ff; }
-
-    /* Library & Song Items */
-    #library-list { width: 100%; list-style: none; }
-    .song-item {
-      background: #f5f5f7; padding: 14px 16px; margin-bottom: 8px;
-      border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
-      cursor: pointer; -webkit-tap-highlight-color: transparent;
-      -webkit-user-select: none; user-select: none; transition: background 0.15s ease;
-    }
-    .song-item.pressing { background: #c7c7cc; transition: background 0.4s ease; }
-    .song-item.menu-open { border-radius: 10px 10px 0 0; margin-bottom: 0; }
-    .song-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-    .song-name { font-weight: 500; font-size: 16px; }
-    .song-duration { font-size: 13px; color: #6e6e73; margin-top: 2px; }
-    .status-msg { margin-top: 10px; font-size: 14px; color: #6e6e73; text-align: center; }
-
-    .context-menu {
-      background: #fff; border: 1px solid #e5e5ea; border-top: none;
-      border-radius: 0 0 10px 10px; margin-top: 0; margin-bottom: 8px;
-      overflow: hidden; animation: slideDown 0.15s ease; width: 100%;
-    }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-    .context-menu button {
-      width: 100%; padding: 14px 16px; border: none; background: none;
-      font-size: 15px; cursor: pointer; text-align: left;
-      font-family: inherit; color: #1d1d1f; border-bottom: 1px solid #f0f0f0;
-    }
-    .context-menu button:last-child { border-bottom: none; }
-    .context-menu button:active { background: #f5f5f7; }
-    .context-menu .btn-danger { color: #ff3b30; }
-
-    /* Overlays */
-    .overlay {
-      position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
-      background: rgba(0,0,0,0.4); z-index: 9999 !important;
-      display: none; align-items: center; justify-content: center;
-    }
-    .overlay.active { display: flex !important; animation: fadeIn 0.2s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-    .modal {
-      background: #fff; border-radius: 14px; width: 320px; padding: 24px;
-      animation: scaleIn 0.2s ease; max-height: 85vh; overflow-y: auto;
-      -webkit-user-select: none; user-select: none;
-    }
-    .modal h3 { font-size: 17px; margin-bottom: 16px; text-align: center; }
-    .modal label { display: block; font-size: 13px; color: #6e6e73; margin-bottom: 4px; margin-top: 12px; }
-    .modal label:first-of-type { margin-top: 0; }
-    .modal input {
-      width: 100%; padding: 10px; font-size: 16px; border: 1px solid #e5e5ea;
-      border-radius: 8px; font-family: inherit; outline: none;
-      -webkit-user-select: text; user-select: text;
-    }
-    .modal input:focus { border-color: #007aff; }
-    .modal-row { display: flex; gap: 8px; }
-    .modal-row > div { flex: 1; }
-    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
-Here is the complete, updated `index.html` with the `?v=3` label and the SW reset block correctly inserted. Copy this entire file and replace your existing one on GitHub:
+      width: 26px; height: 26px; border-radius: 6px;=3` on the script tag and the SW reset block replacing the old registration line. Nothing else has been altered.
 
 ```html
 <!DOCTYPE html>
@@ -306,158 +128,25 @@ Here is the complete, updated `index.html` with the `?v=3` label and the SW rese
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#ffffff">
-  <title>Taktwerk</title>
+  <meta name="theme-color" content="#ffffff"> border: 1
+  <titlepx solid #e5e5ea;
+      background>Taktwerk</title>
   <link rel="manifest" href="/taktwerk/manifest.json">
   <link rel="apple-touch-icon" href="/taktwerk/icon-192.png">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: : #fff;0; box-sizing: border-box; color: #6e6e73; font-size: 14 }
     body { 
       font-family: -apple-system, system-ui, sans-serif; 
       background: #ffffff; color: #1d1d1f;
       min-height: 100dvh; 
-      padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 160px);
-      display: flex; flex-direction: column; align-items: center;
-      -webkit-user-select: none; user-select: none;
-    }
-    h1 { margin-bottom: 16px; }
-
-    .tab-bar {
-      display: flex; width: 100%; max-width: 300px; margin-bottom: 20px;
-      border: 2px solid #000; border-radius: 12px; overflow: hidden;
-    }
-    .tab-btn {
-      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 12px; border: none; background: #fff; font-size: 14px; font-weight: 600;
-      cursor: pointer; color: #1d1d1f; font-family: inherit;
-      transition: background 0.15s ease, color 0.15s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .tab-btn:first-child { border-right: 2px solid #000; }
-    .tab-btn.active { background: #007aff; color: #fff; }
-    .tab-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
-
-    .view { display: none; width: 100%; max-width: 600px; }
-    .view.active { display: block; }
-    #view-add.active { display: flex; flex-direction: column; align-items: center; }
-
-    /* Piece Form Styles */
-    .piece-form {
-      width: 100%; max-width: 320px;
-      display: flex; flex-direction: column; gap: 0;
-    }
-    .form-label {
-      display: block; font-size: 13px; color: #6e6e73;
-      margin-bottom: 4px; margin-top: 14px; font-weight: 500;
-    }
-    .form-label:first-child { margin-top: 0; }
-    .form-input {
-      width: 100%; padding: 10px 12px; font-size: 15px;
-      border: 1px solid #e5e5ea; border-radius: 8px;
-      font-family: inherit; outline: none; background: #fff;
-      -webkit-user-select: text; user-select: text;
-      color: #1d1d1f;
-    }
-    .form-input:focus { border-color: #007aff; }
-    .form-input::placeholder { color: #aeaeb2; }
-    .form-row { display: flex; gap: 8px; margin-top: 14px; }
-    .form-row > div { flex: 1; }
-
-    /* Key Signature Dropdown */
-    .key-sig-wrapper { position: relative; }
-    .key-sig-trigger {
-      width: 100%; padding: 10px 12px; font-size: 15px;
-      border: 1px solid #e5e5ea; border-radius: 8px;
-      background: #fff; color: #1d1d1f; cursor: pointer;
-      text-align: left; font-family: inherit;
-      display: flex; justify-content: space-between; align-items: center;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .key-sig-trigger.placeholder { color: #aeaeb2; }
-    .key-sig-trigger::after { content: '▼'; font-size: 10px; color: #6e6e73; }
-    .key-sig-dropdown {
-      position: fixed; z-index: 10000; background: #fff;
-      border: 1px solid #e5e5ea; border-radius: 10px;
-      max-height: 300px; overflow-y: auto;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-      display: none; flex-direction: column; width: 280px;
-    }
-    .key-sig-dropdown.active { display: flex; }
-    .key-sig-option {
-      padding: 11px 16px; font-size: 14px; cursor: pointer;
-      border-bottom: 1px solid #f5f5f7;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .key-sig-option:last-child { border-bottom: none; }
-    .key-sig-option:active { background: #f5f5f7; }
-    .key-sig-toggle {
-      padding: 11px 16px; font-size: 13px; font-weight: 600;
-      color: #007aff; cursor: pointer; border-top: 1px solid #e5e5ea;
-      background: #fafafa; -webkit-tap-highlight-color: transparent;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .key-sig-toggle:active { background: #f0f7ff; }
-    .key-sig-toggle .arrow { transition: transform 0.15s ease; display: inline-block; }
-    .key-sig-toggle.expanded .arrow { transform: rotate(90deg); }
-    .key-sig-obscure { display: none; }
-    .key-sig-obscure.visible { display: block; }
-
-    /* Catalogue conditional row */
-    .catalogue-row { display: flex; gap: 8px; align-items: flex-start; }
-    .catalogue-row > div:first-child { flex: 1; }
-    .catalogue-row > div:last-child { flex: 1; }
-    .catalogue-select {
-      width: 100%; padding: 10px 12px; font-size: 15px;
-      border: 1px solid #e5e5ea; border-radius: 8px;
-      font-family: inherit; outline: none; background: #fff;
-      color: #1d1d1f; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236e6e73'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 12px center;
-    }
-    .catalogue-select:focus { border-color: #007aff;    .modal-actions }
-
-    /* Movement Sections */
-    .movements-divider {
-      margin-top:  button {
-     20px; padding-top: 16px;
-      border-top: 2px solid #000;
-      font-size: 14px; font-weight: 700; color: #1d1d1f;
-      text-align: center; letter-spacing: 0.5px;
-    }
-    .movement-outline {
-      margin-top: 14px; padding: 14px;
-      border: 1px solid #e5e5ea; border-radius: 10px;
-      background: #fafafa; position: relative;
-    }
-    .movement-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 10px;
-    }
-    .movement-title-label {
-      font-size: 14px; font-weight: 600; color: #1d1d1f;
-    }
-    .movement-actions { display: flex; gap: 6px; align-items: center; }
-    .movement-reset-btn {
-      padding: 4px 10px; border-radius: 6px; border: 1px solid #e5e5ea;
-      background: #fff; color: #6e6e7 padding: 10px 23; font-size: 12px; font-weight: 500;
-      cursor: pointer; font-family: inherit;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .movement-reset-btn:active { background: #f5f5f7; }
-    .movement-delete-btn {
-      width: 26px; height: 26px; border-radius: 6px; border: 1px solid #e5e5ea;
-      background: #fff; color: #6e6e73; font-size: 14px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      paddingpx;
+      cursor: pointer;: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 160px);
+      display display: flex; align-items: center; justify-content: center;
       -webkit-tap-highlight-color: transparent;
     }
     .movement-delete-btn:active { background: #fff0f0; color: #ff3b30; }
-    .movement-delete-btn.locked {
-      opacity: 0.3; pointer-events: none; cursor: default;
-    }
-    .movement-field-label {
-      display: block; font-size: 12px; color: #6e6e73;
-      margin-bottom: 3px; margin-top: 10px;
-    }
+    .movement-delete-btn.locked { opacity: 0.3; pointer-events: none; cursor: default; }
+    .movement-field-label { display: block; font-size: 12px; color: #6e6e73; margin-bottom: 3px; margin-top: 10px; }
     .movement-field-label:first-of-type { margin-top: 0; }
     .movement-input {
       width: 100%; padding: 8px 10px; font-size: 14px;
@@ -477,27 +166,199 @@ Here is the complete, updated `index.html` with the `?v=3` label and the SW rese
     }
     .movement-key-sig-trigger.placeholder { color: #aeaeb2; }
     .movement-key-sig-trigger::after { content: '▼'; font-size: 9px; color: #6e6e73; }
-    .movement-file-picker {
-      width: 100%; padding: 8px 0; font-size: 13px;
-      color: #007aff; cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .movement-file-name {
-      font-size: 12px; color: #6e6e73; margin-top: 4px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    /* Save button */
+    .movement-file-picker { width: 100%; padding: 8px 0; font-size: 13px; color: #007aff; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .movement-file-name { font-size: 12px; color: #6e6e73; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .save-btn {
-      margin-top: 24px; padding: 14px 24px;
-      background: #007aff; color: #fff; border: none;
+      margin-top: 24px; padding: 14px 24px; background: #007aff; color: #fff; border: none;
       border-radius: 12px; font-size: 17px; font-weight: 600;
-      cursor: pointer; width: 100%; font-family: inherit;
-      -webkit-tap-highlight-color: transparent;
+      cursor: pointer; width: 100%; font-family: inherit; -webkit-tap-highlight-color: transparent;
     }
     .save-btn:active { opacity: 0.8; }
-
-    /* Composer Selector */
+    .composer-selector-trigger {
+      width: 100%; padding: 10px 12px; border: 1px solid #e5e5ea;
+      border-radius: 8px; background: #fff; font-size: 15px; color: #1d1d1f;
+      cursor: pointer; text-align: left; font-family: inherit;
+      display: flex; justify-content: space-between; align-items: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .composer-selector-trigger.placeholder { color: #aeaeb2; }
+    .composer-selector-trigger::after { content: '▼'; font-size: 10px; color: #6e6e73; }
+    .: flex; flex-direction: column; align-items: center;
+      -webkit-user-select: none; user-select: none;
+    }
+    h1 { margin-bottom: 16px; }
+    .tab-bar {
+      display: flex; width: 100%; max-width: 300px; margin-bottom: 20px;
+      border: 2px solid #000; border-radiuscomposer-dropdown {
+      position: fixed: 12px; overflow: hidden;
+    }
+    .tab-btn {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 12px; border: none; background: #fff; font-size: 14px; font-weight: 600;
+      cursor: pointer; color: #1d1d1f; font-family: inherit;
+      transition: background 0; z-index:.15s ease, color 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn:first-child { border-right: 2px solid #000; }
+    .tab-btn.active { background: #007aff; color: #fff; }
+    .tab-btn svg { width: 100 18px; height: 18px; flex-shrink: 0; }
+    .view { display: none; width: 100%; max-width: 600px; }
+    .view.active { display: block; }
+    #view-add.active { display: flex; flex-direction: column; align-items: center; }
+    .piece-form { width: 100%; max-width00; background: 320px; display: flex; flex-direction: column; gap: 0; }
+    .form-label { display: block; font-size: 13px; color: #6e6e73; margin-bottom: 4px; margin-top: 14px; font-weight: 500; }
+    .form-label:first-child { margin-top: 0; }
+    .form-input {
+: #fff;
+      border:      width: 100%; padding: 10px 12px; font-size: 15px;
+      border: 1px solid #e5e5ea; border-radius: 8px;
+      font-family: inherit; outline: none; background: #fff;
+      -webkit-user-select: text; user-select: text; color 1px solid: #1d1d1f;
+    }
+    .form-input:focus { border-color: #007aff; }
+    .form-input::placeholder { color: #aeaeb2; }
+    .form-row { display: flex; gap: 8px; margin-top: 14px; }
+    .form-row > div { flex: 1; } #e5e
+    .key-sig-wrapper { position: relative; }
+    .key-sig-trigger {
+      width: 100%; padding: 10px 12px; font-size: 15px;
+      border: 1px solid #e5e5ea; border-radius: 8px;
+      background: #fff; color:5ea; border-radius: 10px;
+ #1d1d1f; cursor: pointer;
+      text-align: left; font-family: inherit;
+      display: flex; justify-content: space-between; align-items: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .key-sig-trigger.placeholder { color: #aeaeb2; }
+    .key-sig-trigger::after { content: '▼'; font-size: 10px; color: #6e6e73; }
+    .key-sig      max-height:-dropdown {
+      position: fixed; z-index: 10000; background: #fff;
+      border: 1px solid #e5e5ea; border-radius: 10px;
+      max-height: 300px; overflow-y: auto;
+      320 box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      display: none; flex-direction: column; width: 280px;
+    }
+    .key-sig-dropdown.active { display: flex; }
+    .key-sig-option {
+      padding: 11px 16px; font-size: 14px; cursor: pointer;
+      border-bottom: 1px solid #f5f5f7; -webkit-tap-highlight-color: transparent;
+    }
+    .key-sig-optionpx; overflow-y: auto;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      display: none; flex-direction: column;
+    }
+    .composer-dropdown.active { display: flex; }
+    .composer-search { padding: 10px 12px; border-bottom: 1px solid #e5e5ea; position: sticky; top: 0; background: #fff; z-index: 1; }
+    .composer-search input {
+      width: 100%; padding: 8px 10px; font-size: 14px; border: 1px solid #e5e5ea;
+      border-radius: 6px; outline: none; font-family: inherit;
+      -webkit-user-select: text; user-select: text;
+    }
+    .composer-search input:focus { border-color: #007aff; }
+    .composer-list { flex: 1; overflow-y: auto; }
+    .composer-option { padding: 12px 16px; font-size: 15px; cursor: pointer; border-bottom:last-child { border-bottom: none; }
+    .key-sig-option:active { background: #f5f5f7; }
+    .key-sig-toggle {
+      padding: 11px 16px; font-size: 13px; font-weight: 600;
+      color: #007aff: 1px solid #f5; cursor: pointer; border-top: 1px solid #e5e5ea;
+      background: #fafafa; -webkit-tap-highlight-color: transparent;
+      display: flex; align-items: center; gap: 6pxf5f7; -webkit-tap-highlight-color: transparent; }
+    .composer-option:last-child { border-bottom: none; }
+    .composer-option:active { background: #f5f5f7; }
+    .composer;
+    }
+    .key-sig-toggle:active { background: #f0f7ff; }
+    .key-sig-toggle .arrow { transition: transform 0.15s ease; display: inline-block; }
+    .key-sig-toggle.expanded .arrow { transform: rotate(90deg); }-empty { padding:
+    .key-sig-obscure { display: none; }
+    .key-sig-obscure.visible { display: block; }
+ 16px    .catalogue; text-align: center; color: #6e6e73;-row { display: font-size: 14px; }
+    .composer-add-new { flex; gap: 8px; align-items: flex-start; }
+    .catalogue
+      padding: 12px 16px; border-top: 1px solid-row > div:first #e5e5ea;
+      color: #007aff; font-size: 14px-child { flex: 1; }
+    .catalogue-row > div; font-weight::last-child { flex: 1; 600 }
+    .;
+      cursor: pointer; textcatalogue-select {-align: center; background: #faf
+      width: 100%; padding: afa;
+     10px  border-radius: 12px;0 0  font-size: 10px 15px;10px;
+      border: 1px solid #e5e -webkit-tap-highlight-color: transparent;
+    }5ea; border
+    .composer-add-new:active { background: #-radius: 8f0f7ff; }
+    #library-list { width: 100%; list-style: nonepx;
+      font-family: inherit; outline: none; }
+    .song-item {
+      background: #f5f5f7; padding: 14px 16px; margin-bottom: 8px;
+      border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none; user-select: none; transition: background 0.15s ease;
+    }
+   ; background: #fff;
+      color: #1d1d1f; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0  .song-item.pressing { background:0l5 6 5- #c7c7cc; transition: background 0.4s ease; }
+    .song-item.menu-open { border-radius: 10px 10px 0 0; margin-bottom: 0; }
+    .song-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+    .song-name { font-weight: 500; font-size: 16px; }
+    .song-duration { font-size: 13px; color: #6e6e73; margin-top: 2px; }
+    .status-msg6z' fill='%236e6e73'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+    }
+    .catalogue-select:focus { border-color: #007aff; }
+    .movements-divider {
+      margin-top: 20px; padding-top: { margin-top: 16px; border-top: 2px solid #000;
+      font-size: 14px; font-weight: 700; color: #1d1d1f;
+      text-align: center; letter-spacing: 0.5px;
+    }
+    .movement-outline {
+      margin-top: 14px; padding: 14px;
+      border: 1px solid #e5e5ea; border-radius: 10px;
+      background: #fafafa; position: relative;
+    }
+    .movement-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .movement-title-label { font-size: 14px; font-weight: 600; color: #1d1d1f; }
+    .movement-actions { display: flex; gap: 6px; align-items: center; }
+    .movement-reset-btn {
+      padding: 4px 10px; border-radius: 6px; border: 1px solid #e5e5ea;
+      background: #fff; color: #6e6e73; font-size: 12px; font-weight: 500;
+      cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent;
+    }
+    .movement-reset-btn:active { background: #f5f5f7; }
+    .movement-delete-btn {
+      width: 26px; height: 26px; border-radius: 6px; border: 1px solid #e5e5ea;
+      background: #fff; color: #6e6e73; font-size: 14px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .movement-delete-btn:active { background: #fff0f0; color: #ff3b30; }
+    .movement-delete-btn.locked { opacity: 0.3; pointer-events: none; cursor: default; }
+    .movement-field-label { display: block; font-size: 12px; color: #6e6e73; margin-bottom: 3px; margin-top: 10px; }
+    .movement-field-label:first-of-type { margin-top: 0; }
+    .movement-input {
+      width: 100%; padding: 8px 10px; font-size: 14px;
+      border: 1px solid #e5e5ea; border-radius: 6px;
+      font-family: inherit; outline: none; background: #fff;
+      -webkit-user-select: text; user-select: text; color: #1d1d1f;
+    }
+    .movement-input:focus { border-color: #007aff; }
+    .movement-input::placeholder { color: #aeaeb2; }
+    .movement-key-sig-trigger {
+      width: 100%; padding: 8px 10px; font-size: 14px;
+      border: 1px solid #e5e5ea; border-radius: 6px;
+      background: #fff; color: #1d1d1f; cursor: pointer;
+      text-align: left; font-family: inherit;
+      display: flex; justify-content: space-between; align-items: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .movement-key-sig-trigger.placeholder { color: #aeaeb2; }
+    .movement-key-sig-trigger::after { content: '▼'; font-size: 9px; color: #6e6e73; }
+    .movement-file-picker { width: 100%; padding: 8px 0; font-size: 13px; color: #007aff; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .movement-file-name { font-size: 12px; color: #6e6e73; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .save-btn {
+      margin-top: 24px; padding: 14px 24px; background: #007aff; color: #fff; border: none;
+      border-radius: 12px; font-size: 17px; font-weight: 600;
+      cursor: pointer; width: 100%; font-family: inherit; -webkit-tap-highlight-color: transparent;
+    }
+    .save-btn:active { opacity: 0.8; }
     .composer-selector-trigger {
       width: 100%; padding: 10px 12px; border: 1px solid #e5e5ea;
       border-radius: 8px; background: #fff; font-size: 15px; color: #1d1d1f;
@@ -515,10 +376,7 @@ Here is the complete, updated `index.html` with the `?v=3` label and the SW rese
       display: none; flex-direction: column;
     }
     .composer-dropdown.active { display: flex; }
-    .composer-search {
-      padding: 10px 12px; border-bottom: 1px solid #e5e5ea;
-      position: sticky; top: 0; background: #fff; z-index: 1;
-    }
+    .composer-search { padding: 10px 12px; border-bottom: 1px solid #e5e5ea; position: sticky; top: 0; background: #fff; z-index: 1; }
     .composer-search input {
       width: 100%; padding: 8px 10px; font-size: 14px; border: 1px solid #e5e5ea;
       border-radius: 6px; outline: none; font-family: inherit;
@@ -526,10 +384,7 @@ Here is the complete, updated `index.html` with the `?v=3` label and the SW rese
     }
     .composer-search input:focus { border-color: #007aff; }
     .composer-list { flex: 1; overflow-y: auto; }
-    .composer-option {
-      padding: 12px 16px; font-size: 15px; cursor: pointer;
-      border-bottom: 1px solid #f5f5f7; -webkit-tap-highlight-color: transparent;
-    }
+    .composer-option { padding: 12px 16px; font-size: 15px; cursor: pointer; border-bottom: 1px solid #f5f5f7; -webkit-tap-highlight-color: transparent; }
     .composer-option:last-child { border-bottom: none; }
     .composer-option:active { background: #f5f5f7; }
     .composer-empty { padding: 16px; text-align: center; color: #6e6e73; font-size: 14px; }
@@ -540,8 +395,6 @@ Here is the complete, updated `index.html` with the `?v=3` label and the SW rese
       border-radius: 0 0 10px 10px; -webkit-tap-highlight-color: transparent;
     }
     .composer-add-new:active { background: #f0f7ff; }
-
-    /* Library & Song Items */
     #library-list { width: 100%; list-style: none; }
     .song-item {
       background: #f5f5f7; padding: 14px 16px; margin-bottom: 8px;
@@ -554,68 +407,97 @@ Here is the complete, updated `index.html` with the `?v=3` label and the SW rese
     .song-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
     .song-name { font-weight: 500; font-size: 16px; }
     .song-duration { font-size: 13px; color: #6e6e73; margin-top: 2px; }
-    .status-msg { margin-top: 10px; font-size: 14px; color: #6e6e73; text-align: center; }
-
+    .status-msg { margin-top: 10px 10px; font-size:; font-size: 14px 14px; color: #; color: #6e6e6e6e73; text73; text-align: center;-align: center; }
+    . }
     .context-menu {
-      background: #fff; border: 1px solid #e5e5ea; border-top: none;
-      border-radius: 0 0 10px 10px; margin-top: 0; margin-bottom: 8px;
-      overflow: hidden; animation: slideDown 0.15s ease; width: 100%;
+context-menu {
+      background: #      background: #fff; border:fff; border: 1px solid 1px solid #e5e #e5e5ea; border5ea; border-top: none;-top: none;
+      border-radius
+      border-radius: 0 : 0 0 100 10px 10px 10px; margin-toppx; margin-top: 0;: 0; margin-bottom:  margin-bottom: 8px;
+8px;
+      overflow: hidden      overflow: hidden; animation: slide; animation: slideDown 0.Down 0.15s ease15s ease; width: ; width: 100%;100%;
     }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-    .context-menu button {
-      width: 100%; padding: 14px 16px; border: none; background: none;
-      font-size: 15px; cursor: pointer; text-align: left;
-      font-family: inherit; color: #1d1d1f; border-bottom: 1px solid #0px; border-radius: 8f0f0f0;
-    }
-    .context-menu button:last-child { border-bottom: none; }
-    .context-menu button:active { background: #f5f5f7; }
-    .context-menu .btn-danger { color: #ff3b30; }
 
-    /* Overlays */
+    }
+    @keyframes    @keyframes slideDown { from slideDown { from { opacity:  { opacity: 0; transform:0; transform: translateY(-4px translateY(-4px); } to {); } to { opacity: 1 opacity: 1; transform: translateY; transform: translateY(0); }(0); } }
+    . }
+    .context-menu button {context-menu button {
+      width:
+      width: 100 100%; padding: %; padding: 14px 14px 16px;16px; border: none; border: none; background: none; background: none;
+      font-size
+      font-size: 15: 15px; cursor:px; cursor: pointer; text-align pointer; text-align: left;
+: left;
+      font-family:      font-family: inherit; color: inherit; color: #1d1 #1d1d1f;d1f; border-bottom:  border-bottom: 1px solid #1px solid #f0f0f0f0f0;
+f0;
+    }
+       }
+    .context-menu button .context-menu button:last-child { border:last-child { border-bottom: none;-bottom: none; }
+    . }
+    .context-menu button:context-menu button:active { background:active { background: #f5f #f5f5f7;5f7; }
+    . }
+    .context-menu .btncontext-menu .btn-danger { color:-danger { color: #ff3b #ff3b30; }30; }
+    .overlay
     .overlay {
-      position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
-      background: rgba(0,0,0,0.4); z-index: 9999 !important;
-      display: none; align-items: center; justify-content: center;
+      position {
+      position: fixed !important: fixed !important; top: ; top: 0 !important;0 !important; left: 0 left: 0 !important; right !important; right: 0 !: 0 !important; bottom:important; bottom: 0 !important 0 !important;
+      background;
+      background: rgba(0: rgba(0,0,0,0,0,0.4,0.4); z-index:); z-index: 999 9999 !important;9 !important;
+      display: none; align-items
+      display: none; align-items: center; justify: center; justify-content: center;-content: center;
     }
-    .overlay.active { display: flex !important; animation: fadeIn 0.2s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
+    }
+    .overlay.active    .overlay.active { display: flex { display: flex !important; animation !important; animation: fadeIn 0: fadeIn 0.2s ease.2s ease; }
+   ; }
+    @keyframes fadeIn @keyframes fadeIn { from { opacity { from { opacity: 0;: 0; } to { opacity } to { opacity: 1;: 1; } }
+    } }
+    @keyframes scale @keyframes scaleIn { from {In { from { transform: scale( transform: scale(0.9);0.9); opacity: 0 opacity: 0; } to {; } to { transform: scale( transform: scale(1); opacity:1); opacity: 1; } 1; } }
+    . }
     .modal {
-      background: #fff; border-radius: 14px; width: 320px; padding: 24px;
-      animation: scaleIn 0.2s ease; max-height: 85vh; overflow-y: auto;
-      -webkit-user-select: none; user-select: none;
+     modal {
+      background: #fff background: #fff; border-radius:; border-radius: 14px 14px; width: ; width: 320px320px; padding: ; padding: 24px;24px;
+      animation:
+      animation: scaleIn 0 scaleIn 0.2s ease.2s ease; max-height:; max-height: 85vh 85vh; overflow-y:; overflow-y: auto;
+      auto;
+      -webkit-user-select -webkit-user-select: none; user: none; user-select: none;-select: none;
     }
-    .modal h3 { font-size: 17px; margin-bottom: 16px; text-align: center; }
-    .modal label { display: block; font-size: 13px; color: #6e6e73; margin-bottom: 4px; margin-top: 12px; }
-    .modal label:first-of-type { margin-top: 0; }
+
+    }
+    .modal h    .modal h3 { font-size3 { font-size: 17: 17px; margin-bottompx; margin-bottom: 16: 16px; text-alignpx; text-align: center; }: center; }
+    .modal
+    .modal label { display: label { display: block; font-size block; font-size: 13: 13px; color:px; color: #6e6 #6e6e73;e73; margin-bottom:  margin-bottom: 4px; margin4px; margin-top: 1-top: 12px; }2px; }
+    .modal
+    .modal label:first-of-type label:first-of-type { margin-top: { margin-top: 0; } 0; }
+    .modal
     .modal input {
-      width: 100%; padding: 10px; font-size: 16px; border: 1px solid #e5e5ea;
-      border-radius: 8px; font-family: inherit; outline: none;
-      -webkit-user-select: text; user-select: text;
+      input {
+      width: 1 width: 100%; padding00%; padding: 10: 10px; font-sizepx; font-size: 16: 16px; border:px; border: 1px solid 1px solid #e5e #e5e5ea;
+      border-radius:5ea;
+      border-radius: 8px; 8px; font-family: inherit font-family: inherit; outline: none; outline: none;
+      -;
+      -webkit-user-select:webkit-user-select: text; user-select text; user-select: text;
+: text;
     }
-    .modal input:focus { border-color: #007aff; }
-    .modal-row { display: flex; gap: 8px; }
-    .modal-row > div { flex: 1; }
-    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
-    .modal-actions button {
-      padding: 10px 20px; border-radius: 8px; border:px; border: none; font-size none; font-size: 15: 15px;
-     px;
-      cursor: pointer; cursor: pointer; font-family: inherit font-family: inherit; font-weight:; font-weight: 500 500;
-    };
-    }
+       }
+    .modal input:focus .modal input:focus { border-color: { border-color: #007 #007aff; }
+aff; }
+    .modal-row    .modal-row { display: flex { display: flex; gap: ; gap: 8px; }8px; }
+    .modal
+    .modal-row > div {-row > div { flex: 1 flex: 1; }
+   ; }
+    .modal-actions { .modal-actions { display: flex; display: flex; gap: 8 gap: 8px; justify-contentpx; justify-content: flex-end;: flex-end; margin-top:  margin-top: 20px; }
+    .20px; }
+    .modal-actions button {modal-actions button { padding: 1 padding: 10px 20px 20px; border0px; border-radius: 8-radius: 8px; border:px; border: none; font-size none; font-size: 15: 15px; cursor:px; cursor: pointer; font-family pointer; font-family: inherit; font-weight: 5: inherit; font-weight: 500; }00; }
     .btn
     .btn-cancel { background:-cancel { background: #f5f #f5f5f7;5f7; color: #1 color: #1d1d1d1d1f; }
 f; }
-    .btn-save { background: #    .btn-save { background: #007aff007aff; color: #; color: #fff; }
-
+    .btn-save    .btn-save { background: # { background: #007aff007aff; color: #; color: #fff; }
 fff; }
-
-    .catalogue    .catalogue-section { margin-top-section { margin-top: 16: 16px; padding-toppx; padding-top: 16: 16px; border-top: 1pxpx; border-top: 1px solid #e5 solid #e5e5ea;e5ea; }
-    .catalogue-section-title }
-    .catalogue-section-title { font-size: { font-size: 13px 13px; color: #; color: #6e6e6e6e73; margin73; margin-bottom: 8-bottom: 8px; }
+    .catalogue    .catalogue-section { margin-top-section { margin-top: 16: 16px; padding-toppx; padding-top: 16: 16px; border-toppx; border-top: 1px: 1px solid #e5 solid #e5e5ea;e5ea; }
+    . }
+    .catalogue-section-titlecatalogue-section-title { font-size: { font-size: 13px 13px; color: #; color: #6e6e6e6e73; margin73; margin-bottom: 8-bottom: 8px; }
 px; }
-    .catalogue    .catalogue-entry { display:-entry { display: flex; gap: flex; gap: 6px; 6px; align-items: center align-items: center; margin-bottom:; margin-bottom: 8px; 8px; }
+    .catalogue    .catalogue-entry { display:-entry { display: flex; gap: flex; gap: 6px; 6px; align-items: center align-items: center; margin-bottom: 8px;; margin-bottom: 8px; }
     . }
     .catalogue-entry inputcatalogue-entry input { flex:  { flex: 1; }
 1; }
@@ -624,8 +506,8 @@ px; }
       width: 2 width: 28px; height8px; height: 28: 28px; border-radiuspx; border-radius: 50: 50%; border: none%; border: none;
       background;
       background: #f5: #f5f5f7f5f7; color: #; color: #6e6e6e6e73; font73; font-size: 1-size: 16px; cursor6px; cursor: pointer;
-: pointer;
-      display: flex      display: flex; align-items:; align-items: center; justify-content center; justify-content: center; flex: center; flex-shrink: -shrink: 0;
+      display: flex: pointer;
+      display: flex; align-items:; align-items: center; justify-content center; justify-content: center; flex: center; flex-shrink: -shrink: 0;
    0;
     }
     . }
@@ -641,194 +523,128 @@ px; }
     }
 
     }
-    .add-c    .add-catalogue-btn:atalogue-btn:active { background:active { background: #f0f #f0f7ff; }
-
-    .rename7ff; }
-
-    .rename-modal {
-     -modal {
-      background: #fff background: #fff; border-radius:; border-radius: 14px 14px; width: ; width: 300px300px; padding: ; padding: 24px;24px;
-      animation:
-      animation: scaleIn 0 scaleIn 0.2s ease.2s ease;
-    };
-    }
+    .add-c    .add-catalogue-btn:atalogue-btn:active { background:active { background: #f0f #f0f7ff; }7ff; }
     .rename
-    .rename-modal h3 {-modal h3 { font-size: 17px; font-size: 17px; margin-bottom:  margin-bottom: 4px; }4px; }
-    .rename
-    .rename-modal input {
--modal input {
-      width:       width: 100%;100%; padding: 1 padding: 10px; font0px; font-size: 1-size: 16px; border6px; border: 1px: 1px solid #e5 solid #e5e5ea;e5ea;
-      border-radius
-      border-radius: 8px: 8px; margin: ; margin: 12px 12px 0; font-family0; font-family: inherit; outline: inherit; outline: none;
-: none;
-      -webkit-user      -webkit-user-select: text;-select: text; user-select: text user-select: text;
-    };
-    }
-    .rename
-    .rename-modal input:focus {-modal input:focus { border-color: # border-color: #007aff007aff; }
-   ; }
-    .rename-modal-actions .rename-modal-actions { display: flex { display: flex; gap: ; gap: 8px; justify8px; justify-content: flex-end-content: flex-end; }
-   ; }
-    .rename-modal-actions .rename-modal-actions button {
-      button {
-      padding: 8 padding: 8px 16px 16px; border-radiuspx; border-radius: 8px: 8px; border: none; border: none; font-size:; font-size: 15px 15px;
-      cursor;
-      cursor: pointer; font: pointer; font-family: inherit;-family: inherit;
-    }
-
-
-    }
-
-    #player-bar    #player-bar {
-      position {
-      position: fixed; bottom: fixed; bottom: 0;: 0; left: 0 left: 0; right: ; right: 0; background:0; background: #fff;
- #fff;
-      border-top:      border-top: 1px solid 1px solid #e5e #e5e5ea;
+    .rename-modal { background:-modal { background: #fff; #fff; border-radius:  border-radius: 14px;14px; width: 3 width: 300px;00px; padding: 2 padding: 24px; animation4px; animation: scaleIn : scaleIn 0.2s0.2s ease; }
+ ease; }
+    .rename-modal    .rename-modal h3 { font h3 { font-size: 1-size: 17px; margin7px; margin-bottom: 4-bottom: 4px; }
+px; }
+    .rename-modal    .rename-modal input {
+      input {
+      width: 1 width: 100%; padding00%; padding: 10: 10px; font-sizepx; font-size: 16: 16px; border:px; border: 1px solid 1px solid #e5e #e5e5ea;
 5ea;
-      padding:       padding: 20px 20px 24px calc24px calc(20px(20px + env(safe + env(safe-area-inset-bottom-area-inset-bottom));
-      display));
-      display: none; flex: none; flex-direction: column;-direction: column; gap: 1 gap: 14px; z4px; z-index: 1-index: 100;
-00;
+      border-radius:      border-radius: 8px; 8px; margin: 1 margin: 12px 02px 0; font-family:; font-family: inherit; outline: inherit; outline: none;
+      none;
+      -webkit-user-select -webkit-user-select: text; user: text; user-select: text;-select: text;
     }
-       }
-    #player-bar.active #player-bar.active { display: flex { display: flex; }
-   ; }
-    .player-song-name .player-song-name {
-      font {
-      font-weight: 6-weight: 600; font00; font-size: 1-size: 18px; white8px; white-space: nowrap;-space: nowrap; overflow: hidden; overflow: hidden;
-      text-
-      text-overflow: ellipsisoverflow: ellipsis; text-align:; text-align: center; width: center; width: 100 100%;
-    }%;
+    .rename-modal
     }
-    .player
-    .player-times { color:-times { color: #6e6 #6e6e73;e73; font-variant- font-variant-numeric: tabularnumeric: tabular-nums; font-nums; font-size: 1-size: 16px; text6px; text-align: center;-align: center; }
+    .rename-modal input:focus { border input:focus { border-color: #0-color: #007aff;07aff; }
     . }
-    .progress-container {
-progress-container {
-      width:       width: 100%;100%; height: 3 height: 32px; display2px; display: flex; align: flex; align-items: center;-items: center;
-      cursor:
-      cursor: pointer; -webkit pointer; -webkit-tap-highlight-color-tap-highlight-color: transparent;
-: transparent;
+    .rename-modal-actions {rename-modal-actions { display: flex; display: flex; gap: 8 gap: 8px; justify-contentpx; justify-content: flex-end;: flex-end; }
+    . }
+    .rename-modal-actions buttonrename-modal-actions button { padding:  { padding: 8px 18px 16px; border6px; border-radius: 8-radius: 8px; border:px; border: none; font-size none; font-size: 15: 15px; cursor:px; cursor: pointer; font-family pointer; font-family: inherit; }: inherit; }
+    #player
+    #player-bar {
+     -bar {
+      position: fixed; position: fixed; bottom: 0 bottom: 0; left: ; left: 0; right:0; right: 0; background 0; background: #fff;: #fff;
+      border-top
+      border-top: 1px: 1px solid #e5 solid #e5e5ea;e5ea;
+      padding:
+      padding: 20px 20px 24px 24px calc(20 calc(20px + env(spx + env(safe-area-insetafe-area-inset-bottom));
+     -bottom));
+      display: none; display: none; flex-direction: column flex-direction: column; gap: ; gap: 14px;14px; z-index:  z-index: 100;100;
     }
-       }
-    .progress-track { .progress-track {
-      width:
-      width: 100 100%; height: %; height: 6px; background6px; background: #e5: #e5e5ea;e5ea; border-radius:  border-radius: 3px;
-3px;
-      position: relative      position: relative; overflow: hidden; overflow: hidden;
-    };
+
     }
+    #player-bar    #player-bar.active { display:.active { display: flex; }
+ flex; }
+    .player-song    .player-song-name { font-weight-name { font-weight: 60: 600; font-size0; font-size: 18: 18px; white-spacepx; white-space: nowrap; overflow: nowrap; overflow: hidden; text: hidden; text-overflow: ell-overflow: ellipsis; text-alignipsis; text-align: center; width: center; width: 10: 100%; }
+0%; }
+    .player-times    .player-times { color: # { color: #6e6e6e6e73; font73; font-variant-numeric-variant-numeric: tabular-: tabular-nums; font-sizenums; font-size: 16: 16px; text-alignpx; text-align: center; }: center; }
     .progress
-    .progress-fill {
-     -fill {
-      height: 1 height: 100%; background00%; background: #00: #007aff; border7aff; border-radius: 3-radius: 3px;
-     px;
-      width: 0 width: 0%; transition: width%; transition: width 0.1 0.1s linear;
-s linear;
-    }
-       }
-    .player-controls { .player-controls { display: flex; display: flex; justify-content: center justify-content: center; align-items:; align-items: center; gap: center; gap: 24px 24px; }
-   ; }
-    .control-btn { .control-btn {
-      background:
-      background: none; border: none; border: none; cursor: none; cursor: pointer; padding: pointer; padding: 8px; 8px;
-      -webkit
-      -webkit-tap-highlight-color-tap-highlight-color: transparent;
-: transparent;
-    }
-       }
-    .control-btn svg .control-btn svg { width:  { width: 36px;36px; height: 3 height: 36px; fill6px; fill: #00: #007aff; }7aff; }
-    .control
-    .control-btn:active svg-btn:active svg { opacity:  { opacity: 0.6;0.6; }
-  </ }
+    .progress-container { width:-container { width: 100 100%; height: %; height: 32px;32px; display: flex; display: flex; align-items: center align-items: center; cursor: pointer; cursor: pointer; -webkit-t; -webkit-tap-highlight-color:ap-highlight-color: transparent; }
+ transparent; }
+    .progress-track    .progress-track { width:  { width: 100%;100%; height: 6 height: 6px; background:px; background: #e5e #e5e5ea; border5ea; border-radius: 3-radius: 3px; position:px; position: relative; overflow: relative; overflow: hidden; }
+ hidden; }
+    .progress-fill    .progress-fill { height:  { height: 100%;100%; background: #0 background: #007aff;07aff; border-radius:  border-radius: 3px; width3px; width: 0%;: 0%; transition: width  transition: width 0.1s0.1s linear; }
+ linear; }
+    .player-controls    .player-controls { display: flex { display: flex; justify-content:; justify-content: center; align-items center; align-items: center; gap: center; gap: 24: 24px; }
+px; }
+    .control-btn    .control-btn { background: none { background: none; border: none; border: none; cursor: pointer; cursor: pointer; padding: ; padding: 8px; -8px; -webkit-tap-highlightwebkit-tap-highlight-color: transparent;-color: transparent; }
+    . }
+    .control-btn svg {control-btn svg { width: 3 width: 36px; height6px; height: 36: 36px; fill:px; fill: #007 #007aff; }
+aff; }
+    .control-btn    .control-btn:active svg {:active svg { opacity: 0 opacity: 0.6; }.6; }
+  </style
   </style>
-</style>
 </head>
-<bodyhead>
+</head>
+<body>>
 <body>
-  >
-  <h1>Takt<h1>Taktwerk</h1werk</h1>
-
-  >
-
-  <div class="tab<div class="tab-bar">
-   -bar">
-    <button class=" <button class="tab-btn active"tab-btn active" id="tab-library id="tab-library">
-      ">
-      <svg viewBox="0<svg viewBox="0 0 2 0 24 244 24" fill="none" fill="none"><path opacity=""><path opacity="0.1"0.1" d="M4 d="M4 9V1 9V16C4 6C4 17.817.8856 856 4 184 18.828.8284 4.4 4.585758579 199 19.414.4142C5.2C5.171517157 207 20 6.1 6.114381438 20  20 8 208 20H16CH16C17.817.8856 856 20 120 18.828.8284 284 20 190 19.414.4142 192 19.414.4142C202C20 18. 18.82848284 20  20 17.817.8856 856 20 120 16V9H4Z" fill="currentColor"/><path6V9H d="M94Z" fill="currentColor"/><path d="M9 13H 13H15" stroke15" stroke="currentColor" stroke="currentColor" stroke-width="2"-width="2" stroke-linecap="round" stroke-line stroke-linecap="round" stroke-linejoin="round"/>join="round"/><path d="M3 6.5C3 6.03<path d="M3 6.5C3 6.03534 534 3 5.3 5.803080302 3.2 3.038403843 5.3 5.609860982C3.2C3.19624 4.19624 4.816481644 3.4 3.816481644 4.4 4.196219624 4.4 4.609860982 4.2 4.038403843C4.3C4.803080302 4 2 4 5.035.03534 534 4 5.4 5.5 4H5 4H12H112H18.5C8.5C18.918.9647 647 4 194 19.197.197 4 1 4 19.399.3902 402 4.038.03843C243C20.180.1836 436 4.196.19624 224 20.800.8038 438 4.816.81644 244 20.960.9616 516 5.609.60982C282C21 5.1 5.803080302 212 21 6.0 6.035343534 21  21 6.5V6.5V6.5V6.5V6.5C6.5C21 621 6.964.96466 266 21 7.1 7.196919698 208 20.9616 7..9616 7.390139018C208C20.803.8038 8.8 8.183518356 206 20.183.1836 8.6 8.803780376 196 19.390.3902 8.2 8.961596157C197C19.197.197 9 1 9 18.968.9647 947 9 18. 18.5 9H5 9H12H512H5.5C5.5C5.035.03534 934 9 4.8 4.803020302 9 4 9 4.609.60982 882 8.961.96157C357C3.816.81644 844 8.803.80376 376 3.196.19624 824 8.183.18356 356 3.038.03843 743 7.390.39018C318C3 7.1 7.196989698 3 6 3 6.964.96466 366 3 6.5 6.5V6.5V6.5V6.5V6.5Z" stroke="Z" stroke="currentColor" stroke-widthcurrentColor" stroke-width="2" stroke="2" stroke-linejoin="round"/><path d="-linejoin="round"/><path d="M4 9M4 9V15.V15.99999999C4 1C4 17.887.8856 456 4 18. 18.82848284 4.5 4.585798579 19. 19.41424142C5.1C5.171577157 19. 19.99999999 6.1 6.114381438 19. 19.99999999 8 1 8 19.999.9999H999H9H15HH15H16C116C17.887.8856 156 19.999.9999 199 18.828.8284 184 19.999.9999 199 19.419.4142 142 19.419.4142C242C20 180 18.828.8284 204 20 17. 17.88568856 20  20 15.915.9999V999V9" stroke="9" stroke="currentColor" stroke-widthcurrentColor" stroke-width="2" stroke="2" stroke-linecap="round-linecap="round" stroke-linejoin" stroke-linejoin="round"/></svg="round"/></svg>
-      Library>
+  <h
+  <h1>Taktwerk1>Taktwerk</h1></h1>
+  <div
+  <div class="tab-bar class="tab-bar">
+    ">
+    <button class="tab<button class="tab-btn active" id-btn active" id="tab-library">="tab-library">
+      <svg
+      <svg viewBox="0  viewBox="0 0 240 24 24" 24" fill="none"> fill="none"><path opacity="0<path opacity="0.1" d.1" d="M4 ="M4 9V169V16C4 1C4 17.887.8856 456 4 18. 18.82848284 4.5 4.585798579 19. 19.41424142C5.1C5.171577157 20  20 6.116.11438 438 20 820 8 20H 20H16C116C17.887.8856 256 20 180 18.828.8284 204 20 19. 19.41424142 19. 19.41424142C20 C20 18.818.8284 284 20 120 17.887.8856 256 20 160 16V9H4V9H4Z" fill="Z" fill="currentColor"/><path dcurrentColor"/><path d="M9 ="M9 13H113H15" stroke="5" stroke="currentColor" stroke-widthcurrentColor" stroke-width="2" stroke="2" stroke-linecap="round-linecap="round" stroke-linejoin" stroke-linejoin="round"/><path="round"/><path d="M3 d="M3 6.5 6.5C3 6C3 6.035.03534 334 3 5.8 5.803020302 3.0 3.038433843 5.6 5.609820982C3.1C3.196249624 4.8 4.816441644 3.8 3.816441644 4.1 4.196249624 4.6 4.609820982 4.0 4.038433843C4.8C4.803020302 4 5 4 5.035.03534 434 4 5.5 5.5 4H1 4H12H182H18.5C1.5C18.968.9647 447 4 19. 19.197 197 4 194 19.390.3902 4.2 4.038403843C203C20.183.1836 4.6 4.196219624 204 20.803.8038 4.8 4.816481644 204 20.961.9616 5.6 5.609860982C212C21 5.8 5.803020302 21  21 6.036.03534 534 21 621 6.5V6.5V6.5V6.5V6.5C2.5C21 6.1 6.964696466 216 21 7.1 7.196989698 20. 20.96169616 7.3 7.390189018C20.C20.80388038 8.1 8.183568356 20. 20.18361836 8.8 8.803760376 19. 19.39023902 8.9 8.961576157C19.C19.197 197 9 189 18.964.9647 9 7 9 18.518.5 9H1 9H12H5.2H5.5C5.5C5.035303534 9 4 9 4.804.80302 302 9 4.9 4.609860982 8.2 8.961596157C3.7C3.816481644 8.4 8.803780376 3.6 3.196219624 8.4 8.183518356 3.6 3.038403843 7.3 7.390139018C3 8C3 7.197.19698 698 3 6.3 6.964696466 3 6 3 6.5V6.5V6.5V6.5V6.5Z6.5Z" stroke="currentColor" stroke="currentColor" stroke-width="" stroke-width="2" stroke-line2" stroke-linejoin="round"/>join="round"/><path d="M<path d="M4 9V4 9V15.915.9999C999C4 174 17.885.8856 4 6 4 18.818.8284 284 4.584.58579 579 19.419.4142C142C5.175.17157 157 19.9999 19.9999 6.116.11438 438 19.919.9999 999 8 198 19.999.9999H9H9H9H15H115H16C176C17.885.8856 196 19.999.9999 189 18.828.8284 194 19.999.9999 199 19.414.4142 192 19.414.4142C202C20 18. 18.82848284 20  20 17.817.8856 856 20 120 15.995.9999V999V9" stroke="currentColor" stroke="currentColor" stroke-width="" stroke-width="2" stroke-line2" stroke-linecap="round"cap="round" stroke-linejoin="round"/></svg>
       Library
+ stroke-linejoin="round"/></svg>
+      Library
+    </button>    </button>
+    <button
+    <button class="tab-btn class="tab-btn" id="tab" id="tab-add">
+     -add">
+      <svg viewBox=" <svg viewBox="0 0 0 0 24 224 24" fill="4" fill="none"><rect xnone"><rect x="3" y="3" y="3" width="3" width="14"="14" height="14 height="14" rx="1" rx="1" stroke="currentColor" stroke="currentColor" stroke-width="" stroke-width="2" stroke-line2" stroke-linecap="round"cap="round" stroke-linejoin=" stroke-linejoin="round"/><path dround"/><path d="M7 ="M7 21H121H17a4 7a4 4 0 4 0 0 0 0 0 4-4V4-4V5" stroke="5" stroke="currentColor" stroke-widthcurrentColor" stroke-width="2" stroke="2" stroke-linecap="round-linecap="round" stroke-linejoin" stroke-linejoin="round"/><path="round"/><path d="M7 d="M7 10h 10h6M106M10 7v6 7v6" stroke="currentColor" stroke="currentColor" stroke-width="" stroke-width="2" stroke-line2" stroke-linecap="round" stroke-linejoin="cap="round" stroke-linejoin="round"/></svg>round"/></svg>
+      Add Music
+      Add Music
     </button
     </button>
-    >
-    <button class="tab<button class="tab-btn" id="-btn" id="tab-add">
-tab-add">
-      <svg viewBox      <svg viewBox="0 0="0 0 24  24 24" fill24" fill="none"><rect="none"><rect x="3" x="3" y="3" y="3" width="14 width="14" height="1" height="14" rx="4" rx="1" stroke="1" stroke="currentColor" stroke-widthcurrentColor" stroke-width="2" stroke="2" stroke-linecap="round-linecap="round" stroke-linejoin" stroke-linejoin="round"/><path="round"/><path d="M7 d="M7 21H 21H17a417a4 4 0 4 0 0 0 0 0 4-4 4-4V5" strokeV5" stroke="currentColor" stroke="currentColor" stroke-width="2"-width="2" stroke-linecap=" stroke-linecap="round" stroke-lineround" stroke-linejoin="round"/>join="round"/><path d="M<path d="M7 107 10h6M1h6M10 7v0 7v6" stroke="6" stroke="currentColor" stroke-widthcurrentColor" stroke-width="2" stroke="2" stroke-linecap="round-linecap="round" stroke-linejoin" stroke-linejoin="round"/></svg="round"/></svg>
-      Add>
-      Add Music
-    </ Music
-    </button>
- button>
+  </>
   </div>
-
- </div>
-
-  <div id  <div id="view-library"="view-library" class="view active class="view active">
+ div>
+  <div id=" <div id="view-library" classview-library" class="view active">="view active">
+    <ul
+    <ul id="library-list id="library-list"></ul>
+"></ul>
+  </div>  </div>
+  <div
+  <div id="view-add id="view-add" class="view" class="view">
     ">
-    <ul id="library<ul id="library-list"></ul>-list"></ul>
-  </div
-  </div>
-
-  >
-
-  <div id="view<div id="view-add" class="-add" class="view">
-   view">
-    <div class=" <div class="piece-form">
-piece-form">
-      <!-- 1      <!-- 1. Piece Title -->. Piece Title -->
-      <label
-      <label class="form-label class="form-label" for="piece" for="piece-title">Piece Title-title">Piece Title *</label>
- *</label>
-      <input type      <input type="text" id="text" id="piece-title"="piece-title" class="form-input class="form-input" placeholder="e" placeholder="e.g., Symphony No.g., Symphony No. 5 in. 5 in C Minor" autocomplete C Minor" autocomplete="off">
-
-="off">
-
-      <!-- 2      <!-- 2. Programmatic Title. Programmatic Title / Subtitle --> / Subtitle -->
-      <label
-      <label class="form-label class="form-label" for="piece" for="piece-subtitle">Programmatic Title / Sub-subtitle">Programmatic Title / Subtitle</label>title</label>
-      <input
-      <input type="text" type="text" id="piece-sub id="piece-subtitle" class="title" class="form-input" placeholderform-input" placeholder="e.g.,="e.g., Fate, Pastoral Fate, Pastoral, Eroica", Eroica" autocomplete autocomplete="off">
-
-="off">
-
-      <!-- 3      <!-- 3. Composer Selector -->. Composer Selector -->
-      <label
-      <label class="form-label class="form-label">Composer *</label">Composer *</label>
+    <div class="piece<div class="piece-form">
+     -form">
+      <label class=" <label class="form-label" forform-label" for="piece-title">="piece-title">Piece Title *</labelPiece Title *</label>
       >
-      <div style="position<div style="position:relative;">
-       :relative;">
-        <button id=" <button id="composer-trigger" classcomposer-trigger" class="composer-selector-trigger="composer-selector-trigger placeholder">Select Composer placeholder">Select Composer</button>
-</button>
-        <div id        <div id="composer-dropdown"="composer-dropdown" class="composer-dropdown class="composer-dropdown">
-          ">
-          <div id="composer<div id="composer-search-wrap" class-search-wrap" class="composer-search"="composer-search" style="display:none style="display:none;">
-            ;">
-            <input type="text<input type="text" id="composer" id="composer-search-input" placeholder-search-input" placeholder="Search composers..."="Search composers..." autocomplete="off"> autocomplete="off">
-          </div
+      <input type="text<input type="text" id="piece" id="piece-title" class="-title" class="form-input" placeholderform-input" placeholder="e.g.,="e.g., Symphony No.  Symphony No. 5 in C Minor5 in C Minor" autocomplete="off" autocomplete="off">
+      ">
+      <label class="form<label class="form-label" for="-label" for="piece-subtitle">piece-subtitle">Programmatic Title /Programmatic Title / Subtitle</label Subtitle</label>
+      >
+      <input type="text<input type="text" id="piece" id="piece-subtitle" class-subtitle" class="form-input"="form-input" placeholder="e.g placeholder="e.g., Fate, Past., Fate, Pastoral, Eroicaoral, Eroica" autocomplete="off" autocomplete="off">
+      ">
+      <label class="form<label class="form-label">Composer *</-label">Composer *</label>
+     label>
+      <div style=" <div style="position:relative;">
+position:relative;">
+        <button id        <button id="composer-trigger"="composer-trigger" class="composer-selector class="composer-selector-trigger placeholder">Select-trigger placeholder">Select Composer</button> Composer</button>
+        <div
+        <div id="composer-dropdown id="composer-dropdown" class="composer" class="composer-dropdown">
+         -dropdown">
+          <div id=" <div id="composer-search-wrap"composer-search-wrap" class="composer-search class="composer-search" style="display" style="display:none;">
+           :none;">
+            <input type=" <input type="text" id="text" id="composer-search-input"composer-search-input" placeholder="Search composers placeholder="Search composers..." autocomplete="off..." autocomplete="off">
+          </">
           </div>
-          >
-          <div id="composer<div id="composer-list" class="-list" class="composer-list"></divcomposer-list"></div>
-          >
-          <div id="composer<div id="composer-add-new" class-add-new" class="composer-add-new="composer-add-new">+ Add New">+ Add New Composer</div> Composer</div>
-        </div
+         div>
+          <div id=" <div id="composer-list" classcomposer-list" class="composer-list"></="composer-list"></div>
+         div>
+          <div id=" <div id="composer-add-new"composer-add-new" class="composer-add class="composer-add-new">+ Add-new">+ Add New Composer</div New Composer</div>
+        </>
         </div>
-      </>
-      </div>
-
      div>
-
-      <!-- 4. <!-- 4. Key Signature -->
- Key Signature -->
+      </div>
+ </div>
       <label class      <label class="form-label">="form-label">Key Signature</labelKey Signature</label>
       >
       <div class="key<div class="key-sig-wrapper"-sig-wrapper" style="position:relative style="position:relative;">
@@ -850,36 +666,54 @@ piece-form">
         </div>
  </div>
       </div>      </div>
-
-      <!-- 
-
-      <!-- 5. Opus5. Opus Number + Piece Number Number + Piece Number -->
-       -->
-      <div class="form<div class="form-row">
-       -row">
+      <div
+      <div class="form-row class="form-row">
+        ">
         <div>
- <div>
-          <label class          <label class="form-label"="form-label" for="opus-number for="opus-number">Opus Number">Opus Number</label>
-</label>
-          <input type          <input type="number" id="number" id="opus-number"="opus-number" class="form-input class="form-input" inputmode="" inputmode="numeric" placeholder="numeric" placeholder="e.g., e.g., 67" autocomplete67" autocomplete="off">
-="off">
-        </div>        </div>
-        <div
-        <div>
+         <div>
+          <label class=" <label class="form-label" forform-label" for="opus-number">="opus-number">Opus Number</Opus Number</label>
+         label>
+          <input type=" <input type="number" id="number" id="opus-number" classopus-number" class="form-input"="form-input" inputmode="numeric inputmode="numeric" placeholder="e" placeholder="e.g., 6.g., 67" autocomplete="7" autocomplete="off">
+       off">
+        </div>
+ </div>
+        <div>        <div>
+          <label
+          <label class="form-label class="form-label" for="piece" for="piece-number">Piece No-number">Piece No.</label>
+.</label>
+          <input type          <input type="number" id="number" id="piece-number"="piece-number" class="form-input class="form-input" inputmode="" inputmode="numeric" placeholder="numeric" placeholder="e.g., e.g., 3" autocomplete="3" autocomplete="off">
+       off">
+        </div>
+ </div>
+      </div>      </div>
+      <div
+      <div id="catalogue id="catalogue-field" style="-field" style="display:none;">
+display:none;">
+        <label class        <label class="form-label">="form-label">Catalogue Reference</Catalogue Reference</label>
+       label>
+        <div class=" <div class="catalogue-row">catalogue-row">
+          <div
+          <div>>
+            <select
+            <select id="catalogue id="catalogue-select" class="-select" class="catalogue-select">catalogue-select">
+              <option
+              <option value="">Select catalogue value="">Select catalogue...</option>
+...</option>
+            </select>            </select>
+          </div
+          </div>
           >
-          <label class="form<label class="form-label" for="-label" for="piece-number">Piecepiece-number">Piece No.</label> No.</label>
-          <input
-          <input type="number" type="number" id="piece-number id="piece-number" class="form" class="form-input" inputmode-input" inputmode="numeric" placeholder="numeric" placeholder="e.g.,="e.g., 3" autocomplete 3" autocomplete="off">
-="off">
+          <div>
+           <div>
+            <input type=" <input type="number" id="number" id="catalogue-number"catalogue-number" class="form-input class="form-input" inputmode="" inputmode="numeric" placeholder="numeric" placeholder="No." autocomplete="No." autocomplete="off">
+         off">
+          </div>
+ </div>
         </div>        </div>
       </div
       </div>
-
-      <!-->
-
-      <!-- 6. Catalog 6. Catalogue Reference (conditionalue Reference (conditional) -->
-     ) -->
-      <div id=" <div id="catalogue-field"catalogue-field" style="display:none style="display:none;">
+      >
+      <div id="catalog<div id="catalogue-auto-field"ue-auto-field" style="display:none style="display:none;">
         ;">
         <label class="form<label class="form-label">Catalogue-label">Catalogue Reference</label> Reference</label>
         <div
@@ -887,70 +721,32 @@ piece-form">
          -row">
           <div>
  <div>
-            <select id            <select id="catalogue-select="catalogue-select" class="catalog" class="catalogue-select">
-ue-select">
-              <option value              <option value="">Select catalogue...</="">Select catalogue...</option>
-           option>
-            </select>
- </select>
+            <input type            <input type="text" id="text" id="catalogue-auto="catalogue-auto-name" class="-name" class="form-input" disabledform-input" disabled style="background:# style="background:#f5f5f5f5f7;color:#f7;color:#6e6e6e6e73;">
+73;">
           </div>          </div>
           <div
           <div>
             >
-            <input type="number" id="catalog<input type="number" id="catalogue-number" classue-number" class="form-input"="form-input" inputmode="numeric inputmode="numeric" placeholder="No" placeholder="No." autocomplete="off." autocomplete="off">
-          </">
+            <input type="number<input type="number" id="catalog" id="catalogue-auto-number"ue-auto-number" class="form-input class="form-input" inputmode="" inputmode="numeric" placeholder="numeric" placeholder="No." autocomplete="No." autocomplete="off">
+         off">
           </div>
-       div>
-        </div>
  </div>
+        </div>
+      </div        </div>
       </div>
-      <div      </div>
-      <div id="catalogue id="catalogue-auto-field" style-auto-field" style="display:none;">="display:none;">
-        <label
-        <label class="form-label class="form-label">Catalogue Reference">Catalogue Reference</label>
-</label>
-        <div class        <div class="catalogue-row="catalogue-row">
-          ">
-          <div>
-           <div>
-            <input type=" <input type="text" id="text" id="catalogue-auto-namecatalogue-auto-name" class="form" class="form-input" disabled style-input" disabled style="background:#f="background:#f5f5f5f5f7;color:#67;color:#6e6e7e6e73;">
-          </div>
-3;">
-          </div>
-          <div>          <div>
-            <input
-            <input type="number" type="number" id="catalogue id="catalogue-auto-number" class-auto-number" class="form-input"="form-input" inputmode="numeric inputmode="numeric" placeholder="No" placeholder="No." autocomplete="off">
-          </." autocomplete="off">
-          </div>
-       div>
-        </div>
- </div>
-      </div>      </div>
-
-      <!-- MOV
-
-      <!-- MOVEMENTS SECTION -->EMENTS SECTION -->
-      <div
-      <div class="movements class="movements-divider">MOVEMENT-divider">MOVEMENTS</div>S</div>
-      <div
-      <div id="movements id="movements-container"></div>-container"></div>
-
-      <!-- Save
-
-      <!-- Save Button -->
-      Button -->
-      <button id=" <button id="piece-save-btn"piece-save-btn" class="save-btn class="save-btn">Save</button">Save</button>
       >
-      <div id="piece<div id="piece-status" class="-status" class="status-msg"></divstatus-msg"></div>
-    </>
+      <div class="mov<div class="movements-divider">MOVements-divider">MOVEMENTS</divEMENTS</div>
+      >
+      <div id="mov<div id="movements-container"></divements-container"></div>
+      >
+      <button id="piece<button id="piece-save-btn" class-save-btn" class="save-btn">="save-btn">Save</button>Save</button>
+      <div
+      <div id="piece-status id="piece-status" class="status" class="status-msg"></div>-msg"></div>
+    </div
     </div>
- div>
+  </>
   </div>
-
- </div>
-
-  <!-- Composer Creation  <!-- Composer Creation Modal -->
-  Modal -->
+ div>
   <div id=" <div id="composer-overlay" classcomposer-overlay" class="overlay">
 ="overlay">
     <div class    <div class="modal" id="modal" id="composer-modal">="composer-modal">
@@ -959,10 +755,10 @@ ue-select">
       <label
       <label for="comp-first for="comp-first">First Name *</">First Name *</label>
      label>
-      <input type=" <input type="text" id="text" id="comp-first" autocompletecomp-first" autocomplete="off">
-="off">
-      <label for      <label for="comp-last">="comp-last">Last Name *</label>
-      Last Name *</label>
+      <input type=" <input type="text" id="text" id="comp-first" autocomplete="off">
+comp-first" autocomplete="off">
+      <label for      <label for="comp-last">="comp-last">Last Name *</labelLast Name *</label>
+      >
       <input type="text<input type="text" id="comp" id="comp-last" autocomplete="-last" autocomplete="off">
      off">
       <label for=" <label for="comp-country">Countrycomp-country">Country of Origin *</label of Origin *</label>
@@ -971,7 +767,7 @@ ue-select">
      off">
       <div class=" <div class="modal-row">
 modal-row">
-        <div>        <div><label for="comp<label for="comp-birth">Birth-birth">Birth Year *</label> Year *</label><input type="number" id="comp<input type="number" id="comp-birth" inputmode="numeric"-birth" inputmode="numeric" autocomplete="off"></ autocomplete="off"></div>
+        <div>        <div><label for="comp<label for="comp-birth">Birth-birth">Birth Year *</label> Year *</label><input type="number<input type="number" id="comp" id="comp-birth" input-birth" inputmode="numeric"mode="numeric" autocomplete="off"></ autocomplete="off"></div>
        div>
         <div><label <div><label for="comp-death for="comp-death">Death Year *</">Death Year *</label><input typelabel><input type="number" id="number" id="comp-death"="comp-death" inputmode="numeric inputmode="numeric" autocomplete="off" autocomplete="off"></div>
 "></div>
@@ -998,40 +794,32 @@ modal-row">
     </div>
  </div>
   </div>  </div>
-
-  <!-- Rename
-
-  <!-- Rename Modal -->
-  Modal -->
-  <div id=" <div id="rename-overlay" classrename-overlay" class="overlay">
-="overlay">
-    <div class    <div class="rename-modal">="rename-modal">
-      <h
-      <h3>Rename Song3>Rename Song</h3></h3>
-      <input
-      <input type="text" type="text" id="rename-input id="rename-input" autocomplete="off" autocomplete="off">
-      ">
-      <div class="rename<div class="rename-modal-actions">
--modal-actions">
-        <button class        <button class="btn-cancel"="btn-cancel" id="rename-cancel id="rename-cancel">Cancel</button">Cancel</button>
-        >
-        <button class="btn<button class="btn-save" id="-save" id="rename-save">Saverename-save">Save</button>
+  <div
+  <div id="rename-overlay id="rename-overlay" class="overlay" class="overlay">
+    ">
+    <div class="rename<div class="rename-modal">
+     -modal">
+      <h3>R <h3>Rename Song</hename Song</h3>
+     3>
+      <input type=" <input type="text" id="text" id="rename-input" autocompleterename-input" autocomplete="off">
+      <div class="off">
+      <div class="rename-modal-actions="rename-modal-actions">
+        ">
+        <button class="btn<button class="btn-cancel" id="-cancel" id="rename-cancel">Cancelrename-cancel">Cancel</button>
 </button>
-      </div>      </div>
-    </div
+        <button class        <button class="btn-save"="btn-save" id="rename-save id="rename-save">Save</button">Save</button>
+      </>
+      </div>
+   div>
     </div>
-  </>
-  </div>
-
- div>
-
-  <!-- Player Bar --> <!-- Player Bar -->
+ </div>
+  </div>  </div>
   <div
   <div id="player-bar id="player-bar">
     ">
     <span class="player<span class="player-song-name" id-song-name" id="player-song-name="player-song-name"></span>
 "></span>
-    <span class    <span class="player-times"="player-times" id="player-times id="player-times">00:">00:00 / 00 / 00:000:00</span>0</span>
+    <span class    <span class="player-times" id="player-times="player-times" id="player-times">00:">00:00 / 00 / 00:000:00</span>0</span>
     <div
     <div class="progress-container class="progress-container" id="progress" id="progress-container">
      -container">
@@ -1047,35 +835,31 @@ modal-row">
  div>
   </div>
  </div>
-  
-  <script  
-  <script type="module" type="module" src="/taktwerk src="/taktwerk/app.js?v=/app.js?v=3"></script>3"></script>
-  <script
-  <script>
- >
-  // One-time SW // One-time SW reset: unregisters reset: unregisters old SW, then old SW, then re-registers fresh re-registers fresh
-  if ('
-  if ('serviceWorker' inserviceWorker' in navigator) {
- navigator) {
-    navigator.serviceWorker    navigator.serviceWorker.getRegistrations()..getRegistrations().then(function(registrthen(function(registrations) {
-ations) {
-      var found =      var found = false;
-      false;
-      registrations.forEach(function(reg registrations.forEach(function(reg) {
-       ) {
-        if (reg.scope if (reg.scope.indexOf('/taktwerk.indexOf('/taktwerk/') !== -1/') !== -1) {
-         ) {
+  <script type="module" src  <script type="module" src="/taktwerk/app="/taktwerk/app.js?v=3.js?v=3"></script>
+"></script>
+  <script>  <script>
+  // One
+  // One-time SW reset:-time SW reset: unregisters old SW, then re-reg unregisters old SW, then re-registers fresh
+ isters fresh
+  if ('serviceWorker if ('serviceWorker' in navigator)' in navigator) {
+    navigator {
+    navigator.serviceWorker.getRegistr.serviceWorker.getRegistrations().then(functionations().then(function(registrations)(registrations) {
+      var {
+      var found = false; found = false;
+      registrations.forEach
+      registrations.forEach(function(reg) {(function(reg) {
+        if (
+        if (reg.scope.indexOf('/reg.scope.indexOf('/taktwerk/') !==taktwerk/') !== -1) { -1) {
+          reg.unregister
           reg.unregister();
- reg.unregister();
-          found = true          found = true;
-        };
+          found();
+          found = true;
+ = true;
         }
+             }
       });
-
-      });
-      if (found      if (found) {
-       ) {
-        // Re-register after // Re-register after old SW is gone old SW is gone
+      if });
+      if (found) { (found) {
         setTimeout(function
         setTimeout(function() {
          () {
@@ -1085,8 +869,8 @@ ations) {
      0);
       } else {
  } else {
-        navigator.serviceWorker        navigator.serviceWorker.register('/taktwerk/sw.js');
-.register('/taktwerk/sw.js');
+        navigator.serviceWorker        navigator.serviceWorker.register('/taktwerk.register('/taktwerk/sw.js');
+/sw.js');
       }
          }
     });
