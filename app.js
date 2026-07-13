@@ -1,4 +1,3 @@
-// app.js - Main application logic with playback + decimal progress
 import { secondsToDecimalMMSS } from '/taktwerk/takt.js';
 
 const DB_NAME = 'TaktwerkDB';
