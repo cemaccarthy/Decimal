@@ -65,6 +65,7 @@
     /* Views */
     .view { display: none; width: 100%; max-width: 600px; }
     .view.active { display: block; }
+    #view-add.active { display: flex; flex-direction: column; align-items: center; }
 
     .import-btn {
       background: #007aff;
@@ -211,8 +212,8 @@
     <ul id="library-list"></ul>
   </div>
 
-  <!-- Add Music View -->
-  <div id="view-add" class="view" style="display:none; flex-direction:column; align-items:center;">
+  <!-- Add Music View (NO inline styles) -->
+  <div id="view-add" class="view">
     <input type="file" id="audioPicker" multiple 
            accept="audio/mpeg, audio/mp3, audio/aac, audio/wav, audio/flac, audio/ogg, .mp3, .aac, .wav, .flac, .ogg, .m4a" 
            style="display:none">
