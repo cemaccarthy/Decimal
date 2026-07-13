@@ -115,6 +115,76 @@
     }
     .catalogue-select:focus { border-color: #007aff; }
 
+    /* Movement Sections */
+    .movements-divider {
+      margin-top: 20px; padding-top: 16px;
+      border-top: 2px solid #000;
+      font-size: 14px; font-weight: 700; color: #1d1d1f;
+      text-align: center; letter-spacing: 0.5px;
+    }
+    .movement-outline {
+      margin-top: 14px; padding: 14px;
+      border: 1px solid #e5e5ea; border-radius: 10px;
+      background: #fafafa; position: relative;
+    }
+    .movement-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px;
+    }
+    .movement-title-label {
+      font-size: 14px; font-weight: 600; color: #1d1d1f;
+    }
+    .movement-actions { display: flex; gap: 6px; align-items: center; }
+    .movement-reset-btn {
+      padding: 4px 10px; border-radius: 6px; border: 1px solid #e5e5ea;
+      background: #fff; color: #6e6e73; font-size: 12px; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .movement-reset-btn:active { background: #f5f5f7; }
+    .movement-delete-btn {
+      width: 26px; height: 26px; border-radius: 6px; border: 1px solid #e5e5ea;
+      background: #fff; color: #6e6e73; font-size: 14px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .movement-delete-btn:active { background: #fff0f0; color: #ff3b30; }
+    .movement-delete-btn.locked {
+      opacity: 0.3; pointer-events: none; cursor: default;
+    }
+    .movement-field-label {
+      display: block; font-size: 12px; color: #6e6e73;
+      margin-bottom: 3px; margin-top: 10px;
+    }
+    .movement-field-label:first-of-type { margin-top: 0; }
+    .movement-input {
+      width: 100%; padding: 8px 10px; font-size: 14px;
+      border: 1px solid #e5e5ea; border-radius: 6px;
+      font-family: inherit; outline: none; background: #fff;
+      -webkit-user-select: text; user-select: text; color: #1d1d1f;
+    }
+    .movement-input:focus { border-color: #007aff; }
+    .movement-input::placeholder { color: #aeaeb2; }
+    .movement-key-sig-trigger {
+      width: 100%; padding: 8px 10px; font-size: 14px;
+      border: 1px solid #e5e5ea; border-radius: 6px;
+      background: #fff; color: #1d1d1f; cursor: pointer;
+      text-align: left; font-family: inherit;
+      display: flex; justify-content: space-between; align-items: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .movement-key-sig-trigger.placeholder { color: #aeaeb2; }
+    .movement-key-sig-trigger::after { content: '▼'; font-size: 9px; color: #6e6e73; }
+    .movement-file-picker {
+      width: 100%; padding: 8px 0; font-size: 13px;
+      color: #007aff; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .movement-file-name {
+      font-size: 12px; color: #6e6e73; margin-top: 4px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
     /* Save button */
     .save-btn {
       margin-top: 24px; padding: 14px 24px;
@@ -391,6 +461,10 @@
           </div>
         </div>
       </div>
+
+      <!-- MOVEMENTS SECTION -->
+      <div class="movements-divider">MOVEMENTS</div>
+      <div id="movements-container"></div>
 
       <!-- Save Button -->
       <button id="piece-save-btn" class="save-btn">Save</button>
